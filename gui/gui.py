@@ -27,6 +27,12 @@ class GUI():
         pygame.font.init()
         self.font = pygame.font.SysFont('Comic Sans MS', 30)
 
+    def scramble(self, times, pause=0):
+        for i in range(times):
+            self.map.scramble(1)
+            self.update()
+            time.sleep(pause)
+
     def update(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -38,6 +44,7 @@ class GUI():
                 if keys[pygame.K_1]:
                     if keys[pygame.K_f]:
                         self.map.makeMove((0,3))
+                        self.map.printMap()
                         print("F'")
                     if keys[pygame.K_u]:
                         self.map.makeMove((1,3))
@@ -65,9 +72,10 @@ class GUI():
                         print("Z'")
 
                 # Move twice
-                elif event.key == pygame.K_2:
+                elif keys[pygame.K_2]:
                     if keys[pygame.K_f]:
                         self.map.makeMove((0,2))
+                        self.map.printMap()
                         print("F2")
                     if keys[pygame.K_u]:
                         self.map.makeMove((1,2))
@@ -96,6 +104,7 @@ class GUI():
                 else:
                     if keys[pygame.K_f]:
                         self.map.makeMove((0,1))
+                        self.map.printMap()
                         print("F")
                     if keys[pygame.K_u]:
                         self.map.makeMove((1,1))
@@ -136,16 +145,18 @@ class GUI():
 
     def drawCube(self):
         cube = self.map.state
+        #print(cube)
         # Cube size param
         offset = (400, 50)
         cubeletSize = 30
         gap = 2
         size = int(math.log(len(cube[0]), 2)) #What demention is used
-        colors = [(255, 0, 0), (255, 255, 0), (0, 0, 255), (255, 255, 255), (0, 255, 0), (255, 165, 0)] #Color of each cube: red, yellow, blue, white, green, orange
+        colors = [(255, 0, 0), (255, 255, 0), (0, 255, 0), (255, 255, 255), (0, 0, 255), (255, 165, 0)] #Color of each cube: red, yellow, blue, white, green, orange
         faces = [(size*(cubeletSize+gap)+gap, size*(cubeletSize+gap)+gap),
-                 (size*(cubeletSize+gap)+gap, 0), (0, size*(cubeletSize+gap)+gap),
-                 (size*(cubeletSize+gap)+gap, 2*(size*(cubeletSize+gap)+gap)),
+                 (size*(cubeletSize+gap)+gap, 0),
                  (2*(size*(cubeletSize+gap)+gap), size*(cubeletSize+gap)+gap),
+                 (size*(cubeletSize+gap)+gap, 2*(size*(cubeletSize+gap)+gap)),
+                 (0, size*(cubeletSize+gap)+gap),
                  (size*(cubeletSize+gap)+gap, 3*(size*(cubeletSize+gap)+gap))] #[Color, offset] for each face; indexing is [front, up, right, down, left, back]
 
         for c in range(len(cube)):
@@ -158,7 +169,7 @@ class GUI():
                             j = 2
                         else:
                             j = 1
-                    pygame.draw.rect(self.screen, colors[cube[c][count]], [offset[0]+f[0]+i*(cubeletSize+gap), offset[1]+f[1]+j*(cubeletSize+gap), cubeletSize, cubeletSize])
+                    pygame.draw.rect(self.screen, colors[cube[c][count]], [offset[0]+f[0]+j*(cubeletSize+gap), offset[1]+f[1]+i*(cubeletSize+gap), cubeletSize, cubeletSize])
                     count += 1
 
     def drawButtons(self):
@@ -179,7 +190,7 @@ if __name__ == "__main__":
 
     m.makeMove((0,2))
 
-    #m.scramble(10)
+    #g.scramble(10, 0.3)
     m.printMap()
 
     while True:
