@@ -4,29 +4,187 @@
     Class with main gui class
 '''
 
+import sys, math, time, pygame
 from beginnersmethod import *
 from map import *
 
+class GUI():
+
+    def __init__(self, map, player=True, width=None, height=None):
+        self.map = map
+        self.player = player
+
+        self.buttons = [[["F ", pygame.Rect(100, 100, 50, 50)], ["F2", pygame.Rect(100, 100, 50, 50)], ["F'", pygame.Rect(100, 100, 50, 50)]]]
+
+        pygame.init()
+        if width is None or height is None:
+            self.screen = pygame.display.set_mode((pygame.display.Info().current_w, pygame.display.Info().current_h), pygame.RESIZABLE)
+        else:
+            self.screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
+
+        pygame.display.set_caption('CubeAI')
+
+        pygame.font.init()
+        self.font = pygame.font.SysFont('Comic Sans MS', 30)
+
+    def update(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit(0)
+
+            keys = pygame.key.get_pressed()
+            if event.type == pygame.KEYDOWN:
+                # Prime
+                if keys[pygame.K_1]:
+                    if keys[pygame.K_f]:
+                        self.map.makeMove((0,3))
+                        print("F'")
+                    if keys[pygame.K_u]:
+                        self.map.makeMove((1,3))
+                        print("U'")
+                    if keys[pygame.K_r]:
+                        self.map.makeMove((2,3))
+                        print("R'")
+                    if keys[pygame.K_d]:
+                        self.map.makeMove((3,3))
+                        print("D'")
+                    if keys[pygame.K_l]:
+                        self.map.makeMove((4,3))
+                        print("L'")
+                    if keys[pygame.K_b]:
+                        self.map.makeMove((5,3))
+                        print("B'")
+                    if keys[pygame.K_x]:
+                        self.map.makeMove((6,3))
+                        print("X'")
+                    if keys[pygame.K_y]:
+                        self.map.makeMove((7,3))
+                        print("Y'")
+                    if keys[pygame.K_z]:
+                        self.map.makeMove((8,3))
+                        print("Z'")
+
+                # Move twice
+                elif event.key == pygame.K_2:
+                    if keys[pygame.K_f]:
+                        self.map.makeMove((0,2))
+                        print("F2")
+                    if keys[pygame.K_u]:
+                        self.map.makeMove((1,2))
+                        print("U2")
+                    if keys[pygame.K_r]:
+                        self.map.makeMove((2,2))
+                        print("R2")
+                    if keys[pygame.K_d]:
+                        self.map.makeMove((3,2))
+                        print("D2")
+                    if keys[pygame.K_l]:
+                        self.map.makeMove((4,2))
+                        print("L2")
+                    if keys[pygame.K_b]:
+                        self.map.makeMove((5,2))
+                        print("B2")
+                    if keys[pygame.K_x]:
+                        self.map.makeMove((6,2))
+                        print("X2")
+                    if keys[pygame.K_y]:
+                        self.map.makeMove((7,2))
+                        print("Y2")
+                    if keys[pygame.K_z]:
+                        self.map.makeMove((8,2))
+                        print("Z2")
+                else:
+                    if keys[pygame.K_f]:
+                        self.map.makeMove((0,1))
+                        print("F")
+                    if keys[pygame.K_u]:
+                        self.map.makeMove((1,1))
+                        print("U")
+                    if keys[pygame.K_r]:
+                        self.map.makeMove((2,1))
+                        print("R")
+                    if keys[pygame.K_d]:
+                        self.map.makeMove((3,1))
+                        print("D")
+                    if keys[pygame.K_l]:
+                        self.map.makeMove((4,1))
+                        print("L")
+                    if keys[pygame.K_b]:
+                        self.map.makeMove((5,1))
+                        print("B")
+                    if keys[pygame.K_x]:
+                        self.map.makeMove((6,1))
+                        print("X")
+                    if keys[pygame.K_y]:
+                        self.map.makeMove((7,1))
+                        print("Y")
+                    if keys[pygame.K_z]:
+                        self.map.makeMove((8,1))
+                        print("Z")
+
+            '''
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for i in range(len(self.buttons)):
+                    if self.buttons[i][1].collidepoint(event.pos):
+                        print('Collission')
+            '''
+
+        self.screen.fill((0, 0, 0))
+        self.drawCube()
+        self.drawButtons()
+        pygame.display.update()
+
+    def drawCube(self):
+        cube = self.map.state
+        # Cube size param
+        offset = (400, 50)
+        cubeletSize = 30
+        gap = 2
+        size = int(math.log(len(cube[0]), 2)) #What demention is used
+        colors = [(255, 0, 0), (255, 255, 0), (0, 0, 255), (255, 255, 255), (0, 255, 0), (255, 165, 0)] #Color of each cube: red, yellow, blue, white, green, orange
+        faces = [(size*(cubeletSize+gap)+gap, size*(cubeletSize+gap)+gap),
+                 (size*(cubeletSize+gap)+gap, 0), (0, size*(cubeletSize+gap)+gap),
+                 (size*(cubeletSize+gap)+gap, 2*(size*(cubeletSize+gap)+gap)),
+                 (2*(size*(cubeletSize+gap)+gap), size*(cubeletSize+gap)+gap),
+                 (size*(cubeletSize+gap)+gap, 3*(size*(cubeletSize+gap)+gap))] #[Color, offset] for each face; indexing is [front, up, right, down, left, back]
+
+        for c in range(len(cube)):
+            count = 0
+            for i in range(1, size+1):
+                for j in range(1, size+1):
+                    f = faces[c]
+                    if i == 2:
+                        if j == 1:
+                            j = 2
+                        else:
+                            j = 1
+                    pygame.draw.rect(self.screen, colors[cube[c][count]], [offset[0]+f[0]+i*(cubeletSize+gap), offset[1]+f[1]+j*(cubeletSize+gap), cubeletSize, cubeletSize])
+                    count += 1
+
+    def drawButtons(self):
+        pass
+        #for i in self.buttons:
+            #pygame.draw.rect(self.screen, (255,255,255), i[1])
+
+
 if __name__ == "__main__":
     print('Testing GUI')
-
     m = Map()
-    m.scramble(10)
-    b = beginnersmethod(m)
-    b.firstPiece()
 
-    b.secondPiece()
-    b.thirdPiece()
-    b.fourthPiece()
-    print("")
-    print(b.log)
-    print(len(b.log))
-    print(Cube(b.cube).cube[4].id)
-    print(Cube(b.cube).cube[4].ore)
-    print(Cube(b.cube).cube[5].id)
-    print(Cube(b.cube).cube[5].ore)
-    print(Cube(b.cube).cube[6].id)
-    print(Cube(b.cube).cube[6].ore)
-    print(Cube(b.cube).cube[7].id)
-    print(Cube(b.cube).cube[7].ore)
+    g = GUI(map=m, player=True, width=800, height=600)
+
+    g.update()
+
+    time.sleep(1)
+
+    m.makeMove((0,2))
+
+    #m.scramble(10)
     m.printMap()
+
+    while True:
+        g.update()
+
+
+
+

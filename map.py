@@ -199,23 +199,23 @@ class Map:
 
         for i in range(move[1]):
             if f == 0:
-                m.turnFront()
+                self.turnFront()
             if f == 1:
-                m.turnUp()
+                self.turnUp()
             if f == 2:
-                m.turnRight()
+                self.turnRight()
             if f == 3:
-                m.turnDown()
+                self.turnDown()
             if f == 4:
-                m.turnLeft()
+                self.turnLeft()
             if f == 5:
-                m.turnBack()
+                self.turnBack()
             if f == 6:
-                m.rotateX()
+                self.rotateX()
             if f == 7:
-                m.rotateY()
+                self.rotateY()
             if f == 8:
-                m.rotateZ()
+                self.rotateZ()
 
     def scramble(self, length):
         moves = []
