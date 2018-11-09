@@ -180,7 +180,7 @@ class GUI():
 
 if __name__ == "__main__":
     print('Testing GUI')
-    m = Map()
+    m = Map(2)
 
     g = GUI(map=m, player=True, width=800, height=600)
 

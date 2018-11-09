@@ -1,298 +1,295 @@
-from face import *
-from beginnersmethod import *
-import random
 
 class Map:
-    # map is the "map" of the cube state.  map has
-    # a state which is a list of faces.  map can print
-    # the map of the cube and rotate, changing state
-    # later will have a hash attribute
 
-    def __init__(self):
-        front = [0,0,0,0]
-        up = [1,1,1,1]
-        right = [2,2,2,2]
-        down = [3,3,3,3]
-        left = [4,4,4,4]
-        back = [5,5,5,5]
-        self.state = [front, up, right, down, left, back]
+    # constructor takes n for size of cube
+    def __init__(self, n):
+        self.size = n
+        self.state = [[],[],[],[],[],[]]
+        for i in range(6):
+            for j in range(n*n):
+                self.state[i].append(i)
+        if n % 2 == 0:
+            self.moves = (3 * n) - 1
+        elif n % 2 == 1:
+            self.moves = (3 * (n - 1)) - 1
 
-    def translate(self, i):
-        if i == 0:
-            return "F"
-        if i == 1:
-            return "U"
-        if i == 2:
-            return "R"
-        if i == 3:
-            return "D"
-        if i == 4:
-            return "L"
-        if i == 5:
-            return "B"
-        if i == "F":
-            return 0
-        if i == "U":
-            return 1
-        if i == "R":
-            return 2
-        if i == "D":
-            return 3
-        if i == "L":
-            return 4
-        if i == "B":
-            return 5
-    def translateDirection(self, i):
-        if i == 1:
-            return ""
-        if i == 2:
-            return "2"
-        if i == 3:
-            return "'"
-    def getOppisite(self, i):
-        if i == 0:
-            return 5
-        if i == 1:
-            return 3
-        if i == 2:
-            return 4
-        if i == 3:
-            return 1
-        if i == 4:
-            return 2
-        if i == 5:
-            return 0
-
-
+    # isSolved returns bool value of if state
+    # is a solved state or not
     def isSolved(self):
-        for i in self.state:
-            if not i[0] == i[1] == i[2] == i[3]:
-                return False
+        for i in range(6):
+            for j in range((self.size * self.size) - 1):
+                if self.state[i][j] != self.state[i][j + 1]:
+                    return False
         return True
+    # turnFront rotates the front layer of the cube
+    # pi/2 clockwise, it takes n which is which
+    # front layer to rotate, 0 being the face
+    # and 1, etc for higher order cubes
+    def turnFront(self, n):
+        assert n <= self.size/2
+        rotation = [self.asRows(1)[self.size - n - 1], self.asColumns(2)[n], self.asRows(3)[n], self.asColumns(4)[self.size - 1 - n]]
+        self.rotateLayers(rotation)
+        # repair Up
+        temp = self.asRows(1)
+        temp[self.size - 1 - n] = self.reverse(rotation[0])
+        self.state[1] = self.rowToFace(temp)
+        # repair Right
+        temp = self.asColumns(2)
+        temp[n] = rotation[1]
+        self.state[2] = self.colToFace(temp)
+        # repair Down
+        temp = self.asRows(3)
+        temp[n] = self.reverse(rotation[2])
+        self.state[3] = self.rowToFace(temp)
+        # repair Left
+        temp = self.asColumns(4)
+        temp[self.size - 1 - n] = rotation[3]
+        self.state[4] = self.colToFace(temp)
 
-    def turnFront(self):
-        f = Face([0,0,0,0])
-        g = Face([0,0,0,0])
-        h = Face([0,0,0,0])
-        rotation = [f.asRows(self.state[1])[1], f.asCollums(self.state[2])[0],f.asRows(self.state[3])[0],f.asCollums(self.state[4])[1]]
+        # if the outer layer is turned, rotate the face
+        if n == 0:
+            self.rotate(0)
 
-        temp = Face(rotation)
-        temp.rotateClockwise()
+    # turns top layer
+    def turnUp(self, n):
+        assert n <= self.size/2
+        rotation = [self.asRows(0)[n], self.asRows(4)[n], self.asRows(5)[self.size - n - 1], self.asRows(2)[n]]
+        self.rotateLayers(rotation)
+        # repair front
+        temp = self.asRows(0)
+        temp[n] = rotation[0]
+        self.state[0] = self.rowToFace(temp)
+        # repair left
+        temp = self.asRows(4)
+        temp[n] = rotation[1]
+        self.state[4] = self.rowToFace(temp)
+        # repair back
+        temp = self.asRows(5)
+        temp[self.size - 1 - n] = self.reverse(rotation[2])
+        self.state[5] = self.rowToFace(temp)
+        # repair right
+        temp = self.asRows(2)
+        temp[n] = self.reverse(rotation[3])
+        self.state[2] = self.rowToFace(temp)
 
-        f.rowToFace([g.asRows(self.state[1])[0], [temp.layout[0][1], temp.layout[0][0]]])
-        self.state[1] = f.layout
-        f.colToFace([temp.layout[1], g.asCollums(self.state[2])[1]])
-        self.state[2] = f.layout
-        f.rowToFace([[temp.layout[2][1], temp.layout[2][0]], g.asRows(self.state[3])[1]])
-        self.state[3] = f.layout
-        f.colToFace([g.asCollums(self.state[4])[0], temp.layout[3]])
-        self.state[4] = f.layout
-        self.state[0] = Face(self.state[0]).rotateClockwise()
+        # rotate outer layer
+        if n == 0:
+            self.rotate(1)
+    # turns right layer
+    def turnRight(self, n):
+        assert n <= self.size/2
+        rotation = [self.asColumns(0)[self.size - 1 - n], self.asColumns(1)[self.size - n - 1], self.asColumns(5)[self.size - n - 1], self.asColumns(3)[self.size - n - 1]]
+        self.rotateLayers(rotation)
+        # repair front
+        temp = self.asColumns(0)
+        temp[self.size - 1 - n] = rotation[0]
+        self.state[0] = self.colToFace(temp)
+        # repair up
+        temp = self.asColumns(1)
+        temp[self.size - 1 - n] = rotation[1]
+        self.state[1] = self.colToFace(temp)
+        # repair back
+        temp = self.asColumns(5)
+        temp[self.size - 1 - n] = rotation[2]
+        self.state[5] = self.colToFace(temp)
+        # repair down
+        temp = self.asColumns(3)
+        temp[self.size - 1 - n] = rotation[3]
+        self.state[3] = self.colToFace(temp)
 
-    def turnUp(self):
-        f = Face([0,0,0,0])
-        g = Face([0,0,0,0])
-        rotation = [f.asRows(self.state[0])[0], f.asRows(self.state[4])[0], f.asRows(self.state[5])[1], f.asRows(self.state[2])[0]]
+        # rotate outer layer
+        if n == 0:
+            self.rotate(2)
 
-        temp = Face(rotation)
-        temp.rotateClockwise()
+    # turns down layer
+    def turnDown(self, n):
+        assert n <= self.size/2
+        rotation = [self.asRows(0)[self.size - n - 1], self.asRows(2)[self.size - n - 1], self.asRows(5)[n], self.asRows(4)[self.size - n - 1]]
+        self.rotateLayers(rotation)
+        # repair front
+        temp = self.asRows(0)
+        temp[self.size - 1 - n] = rotation[0]
+        self.state[0] = self.rowToFace(temp)
+        # repair right
+        temp = self.asRows(2)
+        temp[self.size - 1 - n] = rotation[1]
+        self.state[2] = self.rowToFace(temp)
+        # repair back
+        temp = self.asRows(5)
+        temp[n] = self.reverse(rotation[2])
+        self.state[5] = self.rowToFace(temp)
+        # repair left
+        temp = self.asRows(4)
+        temp[self.size - 1 - n] = self.reverse(rotation[3])
+        self.state[4] = self.rowToFace(temp)
 
-        f.rowToFace([temp.layout[0], g.asRows(self.state[0])[1]])
-        self.state[0] = f.layout
-        f.rowToFace([temp.layout[1], g.asRows(self.state[4])[1]])
-        self.state[4] = f.layout
-        f.rowToFace([g.asRows(self.state[5])[0], [temp.layout[2][1], temp.layout[2][0]]])
-        self.state[5] = f.layout
-        f.rowToFace([[temp.layout[3][1], temp.layout[3][0]], g.asRows(self.state[2])[1]])
-        self.state[2] = f.layout
-        self.state[1] = Face(self.state[1]).rotateClockwise()
+        # rotate face
+        if n == 0:
+            self.rotate(3)
 
-    def turnRight(self):
-        f = Face([0,0,0,0])
-        g = Face([0,0,0,0])
-        rotation = [f.asCollums(self.state[0])[1], f.asCollums(self.state[1])[1], f.asCollums(self.state[5])[1], f.asCollums(self.state[3])[1]]
+    # turns left layer
+    def turnLeft(self, n):
+        assert n <= self.size/2
+        rotation = [self.asColumns(0)[n], self.asColumns(3)[n], self.asColumns(5)[n], self.asColumns(1)[n]]
+        self.rotateLayers(rotation)
+        # repair front
+        temp = self.asColumns(0)
+        temp[n] = rotation[0]
+        self.state[0] = self.colToFace(temp)
+        # repair down
+        temp = self.asColumns(3)
+        temp[n] = rotation[1]
+        self.state[3] = self.colToFace(temp)
+        # repair back
+        temp = self.asColumns(5)
+        temp[n] = rotation[2]
+        self.state[5] = self.colToFace(temp)
+        # repair up
+        temp = self.asColumns(1)
+        temp[n] = rotation[3]
+        self.state[3] = self.colToFace(temp)
+        # rotate face
+        if n == 0:
+            self.rotate(4)
 
-        temp = Face(rotation)
-        temp.rotateClockwise()
+    # turns back layer
+    def turnBack(self, n):
+        assert n <= self.size/2
+        rotation = [self.asRows(1)[n], self.asColumns(4)[n], self.asRows(3)[self.size - n - 1], self.asColumns(2)[self.size - n - 1]]
+        self.rotateLayers(rotation)
+        # repair up
+        temp = self.asRows(1)
+        temp[n] = self.reverse(rotation[0])
+        self.state[1] = self.rowToFace(temp)
+        # repair left
+        temp = self.asColumns(4)
+        temp[n] = rotation[1]
+        self.state[4] = self.colToFace(temp)
+        # repair down
+        temp = self.asRows(3)
+        temp[self.size - 1 - n] = self.reverse(rotation[2])
+        self.state[3] = self.rowToFace(temp)
+        # repair right
+        temp = self.asColumns(2)
+        temp[self.size - 1 - n] = rotation[3]
+        self.state[2] = self.colToFace(temp)
+        # rotate face
+        if n == 0:
+            self.rotate(5)
 
-        f.colToFace([g.asCollums(self.state[0])[0], temp.layout[0]])
-        self.state[0] = f.layout
-        f.colToFace([g.asCollums(self.state[1])[0], temp.layout[1]])
-        self.state[1] = f.layout
-        f.colToFace([g.asCollums(self.state[5])[0], temp.layout[2]])
-        self.state[5] = f.layout
-        f.colToFace([g.asCollums(self.state[3])[0], temp.layout[3]])
-        self.state[3] = f.layout
-        self.state[2] = Face(self.state[2]).rotateClockwise()
-
-    def turnDown(self):
-        f = Face([0,0,0,0])
-        g = Face([0,0,0,0])
-        rotation = [f.asRows(self.state[0])[1], f.asRows(self.state[2])[1], f.asRows(self.state[5])[0], f.asRows(self.state[4])[1]]
-
-        temp = Face(rotation)
-        temp.rotateClockwise()
-
-
-        f.rowToFace([g.asRows(self.state[0])[0], temp.layout[0]])
-        self.state[0] = f.layout
-        f.rowToFace([g.asRows(self.state[2])[0], temp.layout[1]])
-        self.state[2] = f.layout
-        f.rowToFace([[temp.layout[2][1], temp.layout[2][0]], g.asRows(self.state[5])[1]])
-        self.state[5] = f.layout
-        f.rowToFace([g.asRows(self.state[4])[0], [temp.layout[3][1], temp.layout[3][0]]])
-        self.state[4] = f.layout
-        self.state[3] = Face(self.state[3]).rotateClockwise()
-
-    def turnLeft(self):
-        f = Face([0,0,0,0])
-        g = Face([0,0,0,0])
-        rotation = [f.asCollums(self.state[1])[0], f.asCollums(self.state[0])[0], f.asCollums(self.state[3])[0], f.asCollums(self.state[5])[0]]
-
-        temp = Face(rotation)
-        temp.rotateClockwise()
-
-        f.colToFace([temp.layout[0], g.asCollums(self.state[1])[1]])
-        self.state[1] = f.layout
-        f.colToFace([temp.layout[1], g.asCollums(self.state[0])[1]])
-        self.state[0] = f.layout
-        f.colToFace([temp.layout[2], g.asCollums(self.state[3])[1]])
-        self.state[3] = f.layout
-        f.colToFace([temp.layout[3], g.asCollums(self.state[5])[1]])
-        self.state[5] = f.layout
-        self.state[4] = Face(self.state[4]).rotateClockwise()
-
-    def turnBack(self):
-        f = Face([0,0,0,0])
-        g = Face([0,0,0,0])
-        rotation = [f.asRows(self.state[1])[0], f.asCollums(self.state[4])[0], f.asRows(self.state[3])[1], f.asCollums(self.state[2])[1]]
-
-        temp = Face(rotation)
-        temp.rotateClockwise()
-
-        f.rowToFace([temp.layout[0], g.asRows(self.state[1])[1]])
-        self.state[1] = f.layout
-        f.colToFace([[temp.layout[1][1], temp.layout[1][0]], g.asCollums(self.state[4])[1]])
-        self.state[4] = f.layout
-        f.rowToFace([g.asRows(self.state[3])[0], temp.layout[2]])
-        self.state[3] = f.layout
-        f.colToFace([g.asCollums(self.state[2])[0], [temp.layout[3][1], temp.layout[3][0]]])
-        self.state[2] = f.layout
-        self.state[5] = Face(self.state[5]).rotateClockwise()
-
-    def rotateX(self):
-        self.makeMove((4,1))
-        self.makeMove((2,3))
-
-    def rotateY(self):
-        self.makeMove((1,1))
-        self.makeMove((3,3))
-
-    def rotateZ(self):
-        self.makeMove((0,1))
-        self.makeMove((5,3))
-
-    # makeMove is a modifier that takes a move.  a move is a tuple containing int 0:5 saying which face
-    # to rotate, and int 1:3 saying how many times to rotate
+    # makeMove takes a move which is a tuple of the slice
+    # to turn and how many times to turn it
     def makeMove(self, move):
-        f = move[0]
-
         for i in range(move[1]):
-            if f == 0:
-                self.turnFront()
-            if f == 1:
-                self.turnUp()
-            if f == 2:
-                self.turnRight()
-            if f == 3:
-                self.turnDown()
-            if f == 4:
-                self.turnLeft()
-            if f == 5:
-                self.turnBack()
-            if f == 6:
-                self.rotateX()
-            if f == 7:
-                self.rotateY()
-            if f == 8:
-                self.rotateZ()
-
-    def scramble(self, length):
-        moves = []
-        for i in range(length):
-            x = 0
-            while x == 0:
-                move = (random.randint(0,5), random.randint(1,3))
-                if len(moves) != 0:
-                    if move[0] != self.translate(moves[-1][0]) and move[0] != self.getOppisite(self.translate(moves[-1][0])):
-                        moves.append((self.translate(move[0]), self.translateDirection(move[1])))
-                        self.makeMove(move)
-                        x = 1
-                else:
-                    moves.append((self.translate(move[0]), self.translateDirection(move[1])))
-                    self.makeMove(move)
-                    x = 1
-
-        for i in moves:
-            print(i[0],i[1])
-        #self.printMap()
+            if move[0] % 6 == 0:
+                self.turnFront(int(move[0]/6))
+            if move[0] % 6 == 1:
+                self.turnUp(int((move[0] - 1)/6))
+            if move[0] % 6 == 2:
+                self.turnRight(int((move[0] - 2)/6))
+            if move[0] % 6 == 3:
+                self.turnDown(int((move[0] - 3)/6))
+            if move[0] % 6 == 4:
+                self.turnLeft(int((move[0] - 4) / 6))
+            if move[0] % 6 == 5:
+                self.turnBack(int((move[0] - 5) / 6))
 
 
+    # asRows takes int of which face to transform
+    # and returns the face (in self.state) indexed
+    # but as a 2d array representing the n rows
+    # from left to right
+    def asRows(self, i):
+        rows = []
+        for j in range(self.size):
+            row = []
+            for f in range((self.size * j),(self.size * (j + 1))):
+                row.append(self.state[i][f])
+            rows.append(row)
+        return rows
 
+    # asColumns takes int of which face to transform
+    # and returns the face (in self.state) indexed
+    # but as a 2d array representing the n columns
+    # from left to right.  This is done in a similar
+    # fashion to asRows
+    def asColumns(self, i):
+        cols = []
+        for j in range(self.size):
+            col = []
+            for f in range(self.size):
+                col.append(self.state[i][(f * self.size) + j])
+            cols.append(col)
+        return cols
 
+    # colToFace takes a 2d array of collums and turns it into a face
+    # as to easily be put back into state
+    def colToFace(self,cols):
+        l = []
+        for i in range(self.size):
+            for j in range(self.size):
+                l.append(cols[j][i])
+        return l
+
+    # rowToFace takes a 2d array of rows and turns it into a face
+    # as to easily be put back into state
+    def rowToFace(self, rows):
+        l = []
+        for i in range(self.size):
+            for j in range(self.size):
+                l.append(rows[i][j])
+        return l
+
+    # reverse is a simple function that takes a list
+    # and returns it in reverse order
+    @staticmethod
+    def reverse(l):
+        j = []
+        for i in range(len(l)):
+            j.append(l[len(l) - i - 1])
+        return j
+    # this uses the row and column methods with reverse to
+    # rotate the face pi/2 clockwise at index i
+    def rotate(self, i):
+        self.state[i] = self.colToFace(self.reverse(self.asRows(i)))
+
+    # rotate layers rotates a list in a circular way
+    # this will be used to rotate the rows/cols around
+    # the cube
+    @staticmethod
+    def rotateLayers(l):
+        temp = l[0]
+        l[0] = l[3]
+        l[3] = l[2]
+        l[2] = l[1]
+        l[1] = temp
+        return l
+
+    # printMap prints the self.state to console
     def printMap(self):
         for i in range(6):
-            print("")
             if i == 0:
-                print("Front -- 0")
+                print("0 ~ Front")
             if i == 1:
-                print("Up -- 1")
+                print("1 ~ Up")
             if i == 2:
-                print("Right -- 2")
+                print("2 ~ Right")
             if i == 3:
-                print("Down -- 3")
+                print("3 ~ Down")
             if i == 4:
-                print("Left -- 4")
+                print("4 ~ Left")
             if i == 5:
-                print("Back -- 5")
-            Face(self.state[i]).printFace()
-
-    def allPossible(self, l, c):
-        moves = []
-        for i in range(6):
-            for j in range(3):
-                moves.append((i,j+1))
-
+                print("5 ~ Back")
+            rows = self.asRows(i)
+            for j in rows:
+                print(j)
 
 
 if __name__ == '__main__':
-    m = Map()
-    m.scramble(10)
-    b = beginnersmethod(m)
-    b.firstPiece()
-
-    b.secondPiece()
-    b.thirdPiece()
-    b.fourthPiece()
-    print("")
-    print(b.log)
-    print(len(b.log))
-    print(Cube(b.cube).cube[4].id)
-    print(Cube(b.cube).cube[4].ore)
-    print(Cube(b.cube).cube[5].id)
-    print(Cube(b.cube).cube[5].ore)
-    print(Cube(b.cube).cube[6].id)
-    print(Cube(b.cube).cube[6].ore)
-    print(Cube(b.cube).cube[7].id)
-    print(Cube(b.cube).cube[7].ore)
+    m = Map(5)
+    for i in range(25):
+        m.state[1][i] = i
+    m.makeMove((2,3))
     m.printMap()
 
-    # while x == 0:
-    #     m.printMap()
-    #     print(m.isSolved())
-    #     move = input('make a move')
-    #     d = (int(move[0]), int(move[1]))
-    #     if len(move) != 2 or 0 > d[0] or d[0] > 8:
-    #         print("INVALID MOVE")
-    #         x = 2
-    #     m.makeMove(d)
+
