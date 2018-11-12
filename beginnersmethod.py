@@ -1,6 +1,6 @@
 from map import*
 from cube import*
-class beginnersmethod:
+class beginnersMethod:
 
     def __init__(self, map):
         self.cube = map

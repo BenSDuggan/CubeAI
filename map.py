@@ -147,7 +147,7 @@ class Map:
         # repair up
         temp = self.asColumns(1)
         temp[n] = rotation[3]
-        self.state[3] = self.colToFace(temp)
+        self.state[1] = self.colToFace(temp)
         # rotate face
         if n == 0:
             self.rotate(4)
@@ -286,10 +286,12 @@ class Map:
 
 
 if __name__ == '__main__':
-    m = Map(5)
-    for i in range(25):
-        m.state[1][i] = i
-    m.makeMove((2,3))
+    m = Map(2)
+    m.printMap()
+    for i in range(1):
+        #m.makeMove((0,1))
+        m.makeMove((2,1))
+
     m.printMap()
 
 
