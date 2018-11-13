@@ -147,7 +147,7 @@ class GUI():
         cube = self.map.state
         #print(cube)
         # Cube size param
-        offset = (400, 50)
+        offset = (200, 25)
         cubeletSize = 30
         gap = 2
         size = int(math.log(len(cube[0]), 2)) #What demention is used
@@ -164,11 +164,6 @@ class GUI():
             for i in range(1, size+1):
                 for j in range(1, size+1):
                     f = faces[c]
-                    if i == 2:
-                        if j == 1:
-                            j = 2
-                        else:
-                            j = 1
                     pygame.draw.rect(self.screen, colors[cube[c][count]], [offset[0]+f[0]+j*(cubeletSize+gap), offset[1]+f[1]+i*(cubeletSize+gap), cubeletSize, cubeletSize])
                     count += 1
 
