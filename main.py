@@ -4,12 +4,10 @@
     Class with main gui class
 '''
 
-import sys, math, time, pygame
-from map import *
-from gui.gui import *
+from gui import *
 
 def gui():
-    m = Map()
+    m = Map(2)
     g = GUI(map=m, player=True, width=800, height=600)
 
     g.scramble(10, 0.3)

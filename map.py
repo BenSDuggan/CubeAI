@@ -294,4 +294,13 @@ if __name__ == '__main__':
 
     m.printMap()
 
+'''
 
+Map key:
+0 -> Front
+1 -> Up
+2 -> Right
+3 -> Down
+4 -> Left
+5 -> Back
+'''

@@ -4,13 +4,12 @@
     Class with main gui class
 '''
 
-import sys, math, time, pygame
 # from beginnersMethod import *
-from map import *
+from ThreeD_Cube import *
 
 class GUI():
 
-    def __init__(self, map, player=True, width=None, height=None):
+    def __init__(self, map, player=True, width=None, height=None, threeD=True):
         self.map = map
         self.player = player
 
@@ -23,13 +22,19 @@ class GUI():
             self.screen = pygame.display.set_mode((width, height), pygame.RESIZABLE)
 
         pygame.display.set_caption('CubeAI')
+        pygame.time.Clock().tick(50)
 
         pygame.font.init()
         self.font = pygame.font.SysFont('Comic Sans MS', 30)
 
+        if threeD:
+            self.threeD = ThreeD_Cube(self.screen)
+        else:
+            self.threeD = None
+
     def scramble(self, times, pause=0):
         for i in range(times):
-            self.map.scramble(1)
+            #self.map.scramble(1)
             self.update()
             time.sleep(pause)
 
@@ -40,6 +45,19 @@ class GUI():
 
             keys = pygame.key.get_pressed()
             if event.type == pygame.KEYDOWN:
+                # Controls
+                if keys[pygame.K_a]:
+                    if self.threeD != None:
+                        self.threeD.autoRotate = True
+                if keys[pygame.K_m]:
+                    if self.threeD != None:
+                        self.threeD.autoRotate = False
+                if keys[pygame.K_v]:
+                    if self.threeD != None:
+                        self.threeD = None
+                    else:
+                        self.threeD = ThreeD_Cube(self.screen)
+
                 # Prime
                 if keys[pygame.K_1]:
                     if keys[pygame.K_f]:
@@ -138,12 +156,16 @@ class GUI():
                         print('Collission')
             '''
 
-        self.screen.fill((0, 0, 0))
-        self.drawCube()
-        self.drawButtons()
-        pygame.display.update()
+        if self.threeD != None:
+            self.threeD.update(self.map.state, [(255, 0, 0), (255, 255, 0), (0, 255, 0), (255, 255, 255), (0, 0, 255), (255, 165, 0)])
+            self.threeD.draw()
+        else:
+            self.screen.fill((0, 0, 0))
+            self.draw2DCube()
+            self.drawButtons()
+            pygame.display.update()
 
-    def drawCube(self):
+    def draw2DCube(self):
         cube = self.map.state
         #print(cube)
         # Cube size param
@@ -177,13 +199,13 @@ if __name__ == "__main__":
     print('Testing GUI')
     m = Map(3)
 
-    g = GUI(map=m, player=True, width=800, height=600)
+    g = GUI(map=m, player=True, width=800, height=600, threeD=True)
 
     g.update()
 
     time.sleep(1)
 
-    m.makeMove((0,2))
+    #m.makeMove((0,2))
 
     #g.scramble(10, 0.3)
     m.printMap()
