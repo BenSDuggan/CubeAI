@@ -3,6 +3,7 @@ CSCI-B 351 final project with the goal of making an AI to solve a 2x2 cube and p
 
 # Documentation:
 ## Project structure
+```
 ├── gui                     # Folder conaining GUI files
     ├── cubeSpin.py         # Template script to demonstrate how to draw and rotate a cube in 3D
     ├── main_gui.py              # Main file that creates the gui
@@ -14,6 +15,7 @@ CSCI-B 351 final project with the goal of making an AI to solve a 2x2 cube and p
 ├── main.py                 # The main python script which runs all others and serves as the entry point
 ├── project files           # Files needed to submit this project such as proposals and formal documentation
 └── unused                  # Contains currently unused files
+```
 
 ## Cube.py
 
