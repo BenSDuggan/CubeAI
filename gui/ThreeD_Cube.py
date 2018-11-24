@@ -13,7 +13,7 @@ http://codeNtronix.com
 """
 import sys, math, pygame, time
 from operator import itemgetter
-from map import *
+from Cube import *
 
 class Point3D:
     def __init__(self, x = 0, y = 0, z = 0):
@@ -61,6 +61,13 @@ class Point3D:
 
 class Simulation:
     def __init__(self, win_width = 640, win_height = 480):
+        self.window = (win_width, win_height)
+        self.center = (self.window[0]/2, self.window[1]/2)
+        self.mouse_center = None
+        self.speed = 35
+        self.theta = (0,0)
+        self.autoRotate = False
+
         pygame.init()
 
         self.screen = pygame.display.set_mode((win_width, win_height))
@@ -100,59 +107,83 @@ class Simulation:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if pygame.key.get_pressed()[pygame.K_m]:
+                        self.autoRotate = False
+                    if pygame.key.get_pressed()[pygame.K_a]:
+                        self.autoRotate = True
+
+            if pygame.mouse.get_pressed()[0] and not self.autoRotate:
+                if self.mouse_center == None:
+                    self.mouse_center = pygame.mouse.get_pos()
+                self.theta = (self.theta[0] + (pygame.mouse.get_pos()[0]-self.mouse_center[0])/(self.speed), self.theta[1] + (pygame.mouse.get_pos()[1]-self.mouse_center[1])/(self.speed))
 
             self.clock.tick(50)
             self.screen.fill((0,32,0))
 
-            # It will hold transformed vertices.
-            t = []
+            self.draw()
 
-            for v in self.vertices:
-                # Rotate the point around X axis, then around Y axis, and finally around Z axis.
-                r = v.rotateX(self.angle).rotateY(self.angle).rotateZ(self.angle)
-                # Transform the point from 3D to 2D
-                p = r.project(self.screen.get_width(), self.screen.get_height(), 256, 4)
-                # Put the point in the list of transformed vertices
-                t.append(p)
+            if __name__ != '__main__':
+                break
 
-            # Calculate the average Z values of each face.
-            avg_z = []
-            i = 0
-            for f in self.faces:
-                z = (t[f[0]].z + t[f[1]].z + t[f[2]].z + t[f[3]].z) / 4.0
-                avg_z.append([i,z])
-                i = i + 1
+    def draw(self):
+        # It will hold transformed vertices.
+        t = []
 
-            # Draw the faces using the Painter's algorithm:
-            # Distant faces are drawn before the closer ones.
-            for tmp in sorted(avg_z,key=itemgetter(1),reverse=True):
-                face_index = tmp[0]
-                f = self.faces[face_index]
-                pointlist = [(t[f[0]].x, t[f[0]].y), (t[f[1]].x, t[f[1]].y),
-                             (t[f[1]].x, t[f[1]].y), (t[f[2]].x, t[f[2]].y),
-                             (t[f[2]].x, t[f[2]].y), (t[f[3]].x, t[f[3]].y),
-                             (t[f[3]].x, t[f[3]].y), (t[f[0]].x, t[f[0]].y)]
-                pygame.draw.polygon(self.screen,self.colors[face_index],pointlist)
-                #print(pointlist)
+        for v in self.vertices:
+            # Rotate the point around X axis, then around Y axis, and finally around Z axis.
+            #r = v.rotateX(self.angle).rotateY(self.angle).rotateZ(self.angle)
+            r = v.rotateX(self.theta[1]).rotateY(self.theta[0])
+            # Transform the point from 3D to 2D
+            p = r.project(self.screen.get_width(), self.screen.get_height(), 256, 4)
+            # Put the point in the list of transformed vertices
+            t.append(p)
 
-            self.angle += 1
+        # Calculate the average Z values of each face.
+        avg_z = []
+        i = 0
+        for f in self.faces:
+            z = (t[f[0]].z + t[f[1]].z + t[f[2]].z + t[f[3]].z) / 4.0
+            avg_z.append([i,z])
+            i = i + 1
 
-            pygame.display.flip()
+        # Draw the faces using the Painter's algorithm:
+        # Distant faces are drawn before the closer ones.
+        for tmp in sorted(avg_z,key=itemgetter(1),reverse=True):
+            face_index = tmp[0]
+            f = self.faces[face_index]
+            pointlist = [(t[f[0]].x, t[f[0]].y), (t[f[1]].x, t[f[1]].y),
+                         (t[f[1]].x, t[f[1]].y), (t[f[2]].x, t[f[2]].y),
+                         (t[f[2]].x, t[f[2]].y), (t[f[3]].x, t[f[3]].y),
+                         (t[f[3]].x, t[f[3]].y), (t[f[0]].x, t[f[0]].y)]
+            pygame.draw.polygon(self.screen,self.colors[face_index],pointlist)
+            #print(pointlist)
+
+        if self.autoRotate:
+            self.theta = (self.theta[0]+1, self.theta[1]+1)
+
+        pygame.display.flip()
+
 
 class ThreeD_Cube:
     def __init__(self, screen):
         self.vertices = []
         self.faces = []
         self.colors = []
+        self.s = Simulation()
 
     def test(self, cube):
-        s = Simulation()
         self.update(cube,[(255, 0, 0), (255, 255, 0), (0, 255, 0), (255, 255, 255), (0, 0, 255), (255, 165, 0)])
-        s.vertices = self.vertices
-        s.faces = self.faces
-        s.colors = self.colors
-        s.run()
+        self.s.vertices = self.vertices
+        self.s.faces = self.faces
+        self.s.colors = self.colors
+        self.s.run()
 
+    def draw(self):
+        self.s.vertices = self.vertices
+        self.s.faces = self.faces
+        self.s.colors = self.colors
+        self.s.run()
 
     '''
     Methhod that takes in a screen, map and colors and draws them on the screen given
@@ -164,15 +195,16 @@ class ThreeD_Cube:
         face_transformations = [('n',0),('y',90),('x',270),('y',270),('x',90),('x',180)] #Front,up,right,down,left,back
 
         size = int(math.log(len(cube[0]), 2)) #What demention is used
-        offset = 2/(size)/30
-        cube_size = 2/size - offset*(size-1)
+        offset = 2/(size)/25
+        cube_size = (2 - offset*(size+1))/size
 
         for c in range(len(cube)):
             tmp_vertices = []
-            p = (-1,1+offset,1)
+            p = (-1,1+cube_size,1)
             count = 0
             for i in range(0, size):
-                p = (-1, p[1]-offset, p[2])
+                p = (-1, p[1]-offset-cube_size, p[2])
+
                 for j in range(0, size):
                     start_index = len(self.vertices) + len(tmp_vertices)
                     tmp_vertices.append(Point3D(p[0],p[1],p[2]))
@@ -180,34 +212,22 @@ class ThreeD_Cube:
                     tmp_vertices.append(Point3D(p[0]+cube_size,p[1]-cube_size,p[2]))
                     tmp_vertices.append(Point3D(p[0],p[1]-cube_size,p[2]))
                     self.faces.append((start_index,start_index+1,start_index+2,start_index+3))
+
                     self.colors.append(color_bank[cube[c][count]])
 
-                    p = (p[0]+cube_size, p[1], p[2])
-
-                    if j != size-1:
-                        start_index = len(self.vertices) + len(tmp_vertices)
-                        tmp_vertices.append(Point3D(p[0],p[1],p[2]))
-                        tmp_vertices.append(Point3D(p[0]+offset,p[1],p[2]))
-                        tmp_vertices.append(Point3D(p[0]+offset,p[1]-offset,p[2]))
-                        tmp_vertices.append(Point3D(p[0],p[1]-offset,p[2]))
-                        self.faces.append((start_index,start_index+1,start_index+2,start_index+3))
-                        self.colors.append((0,0,0))
-
-                        p = (p[0]+offset, p[1], p[2])
-
+                    p = (p[0]+cube_size+offset, p[1], p[2])
                     count += 1
 
                 if i != size-1 and False:
-                    p = (p[0], p[1]+cube_size, p[2])
-
                     start_index = len(self.vertices) + len(tmp_vertices)
-                    tmp_vertices.append(Point3D(-1,p[1],p[2]))
-                    tmp_vertices.append(Point3D(1,p[1],p[2]))
-                    tmp_vertices.append(Point3D(1,p[1]-offset,p[2]))
-                    tmp_vertices.append(Point3D(-1,p[1]-offset,p[2]))
+                    tmp_vertices.append(Point3D(p[0],p[1],p[2]))
+                    tmp_vertices.append(Point3D(p[0]+offset,p[1],p[2]))
+                    tmp_vertices.append(Point3D(p[0]+offset,p[1]-offset,p[2]))
+                    tmp_vertices.append(Point3D(p[0],p[1]-offset,p[2]))
                     self.faces.append((start_index,start_index+1,start_index+2,start_index+3))
-                    self.colors.append((0,0,0))
+                    self.colors.append((165,165,165))
 
+                    p = (p[0]+offset, p[1], p[2])
 
 
             # Transform to correct position
@@ -226,6 +246,6 @@ if __name__ == "__main__":
     #colors = [(255, 0, 0), (255, 255, 0), (0, 255, 0), (255, 255, 255), (0, 0, 255), (255, 165, 0)]
     #Simulation().run()
 
-    m = Map(2)
+    m = Cube(2)
     c = ThreeD_Cube(None)
     c.test(m.state)

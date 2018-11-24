@@ -1,5 +1,4 @@
-from map import*
-from cube import*
+from unused.cube import*
 class beginnersMethod:
 
     def __init__(self, map):
@@ -96,15 +95,9 @@ class beginnersMethod:
         self.makeMove((3,3))
 
 
-
-
-
-
-
-
 if __name__ == '__main__':
-    m = Map()
-    m.scramble(2)
+    m = Map(2)
+    m.scramble(12)
 
 
 

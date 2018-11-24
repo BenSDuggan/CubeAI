@@ -1,4 +1,4 @@
-from map import*
+from Cube import*
 
 class debug:
 

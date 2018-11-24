@@ -1,16 +1,17 @@
 '''
     Team 4 - Ben Duggan & Connor Altic
-    11/3/18
+    11/24/18
     Class with main gui class
 '''
 
-# from beginnersMethod import *
-from ThreeD_Cube import *
+import pygame
+from gui.ThreeD_Cube import *
+from Cube import *
 
 class GUI():
 
-    def __init__(self, map, player=True, width=None, height=None, threeD=True):
-        self.map = map
+    def __init__(self, cube, player=True, width=None, height=None, threeD=True):
+        self.cube = cube
         self.player = player
 
         self.buttons = [[["F ", pygame.Rect(100, 100, 50, 50)], ["F2", pygame.Rect(100, 100, 50, 50)], ["F'", pygame.Rect(100, 100, 50, 50)]]]
@@ -34,7 +35,7 @@ class GUI():
 
     def scramble(self, times, pause=0):
         for i in range(times):
-            #self.map.scramble(1)
+            self.cube.scramble(1)
             self.update()
             time.sleep(pause)
 
@@ -61,92 +62,92 @@ class GUI():
                 # Prime
                 if keys[pygame.K_1]:
                     if keys[pygame.K_f]:
-                        self.map.makeMove((0,3))
-                        self.map.printMap()
+                        self.cube.makeMove((0,3))
+                        self.cube.printMap()
                         print("F'")
                     if keys[pygame.K_u]:
-                        self.map.makeMove((1,3))
+                        self.cube.makeMove((1,3))
                         print("U'")
                     if keys[pygame.K_r]:
-                        self.map.makeMove((2,3))
+                        self.cube.makeMove((2,3))
                         print("R'")
                     if keys[pygame.K_d]:
-                        self.map.makeMove((3,3))
+                        self.cube.makeMove((3,3))
                         print("D'")
                     if keys[pygame.K_l]:
-                        self.map.makeMove((4,3))
+                        self.cube.makeMove((4,3))
                         print("L'")
                     if keys[pygame.K_b]:
-                        self.map.makeMove((5,3))
+                        self.cube.makeMove((5,3))
                         print("B'")
                     if keys[pygame.K_x]:
-                        self.map.makeMove((6,3))
+                        self.cube.makeMove((6,3))
                         print("X'")
                     if keys[pygame.K_y]:
-                        self.map.makeMove((7,3))
+                        self.cube.makeMove((7,3))
                         print("Y'")
                     if keys[pygame.K_z]:
-                        self.map.makeMove((8,3))
+                        self.cube.makeMove((8,3))
                         print("Z'")
 
                 # Move twice
                 elif keys[pygame.K_2]:
                     if keys[pygame.K_f]:
-                        self.map.makeMove((0,2))
-                        self.map.printMap()
+                        self.cube.makeMove((0,2))
+                        self.cube.printMap()
                         print("F2")
                     if keys[pygame.K_u]:
-                        self.map.makeMove((1,2))
+                        self.cube.makeMove((1,2))
                         print("U2")
                     if keys[pygame.K_r]:
-                        self.map.makeMove((2,2))
+                        self.cube.makeMove((2,2))
                         print("R2")
                     if keys[pygame.K_d]:
-                        self.map.makeMove((3,2))
+                        self.cube.makeMove((3,2))
                         print("D2")
                     if keys[pygame.K_l]:
-                        self.map.makeMove((4,2))
+                        self.cube.makeMove((4,2))
                         print("L2")
                     if keys[pygame.K_b]:
-                        self.map.makeMove((5,2))
+                        self.cube.makeMove((5,2))
                         print("B2")
                     if keys[pygame.K_x]:
-                        self.map.makeMove((6,2))
+                        self.cube.makeMove((6,2))
                         print("X2")
                     if keys[pygame.K_y]:
-                        self.map.makeMove((7,2))
+                        self.cube.makeMove((7,2))
                         print("Y2")
                     if keys[pygame.K_z]:
-                        self.map.makeMove((8,2))
+                        self.cube.makeMove((8,2))
                         print("Z2")
                 else:
                     if keys[pygame.K_f]:
-                        self.map.makeMove((0,1))
-                        self.map.printMap()
+                        self.cube.makeMove((0,1))
+                        self.cube.printMap()
                         print("F")
                     if keys[pygame.K_u]:
-                        self.map.makeMove((1,1))
+                        self.cube.makeMove((1,1))
                         print("U")
                     if keys[pygame.K_r]:
-                        self.map.makeMove((2,1))
+                        self.cube.makeMove((2,1))
                         print("R")
                     if keys[pygame.K_d]:
-                        self.map.makeMove((3,1))
+                        self.cube.makeMove((3,1))
                         print("D")
                     if keys[pygame.K_l]:
-                        self.map.makeMove((4,1))
+                        self.cube.makeMove((4,1))
                         print("L")
                     if keys[pygame.K_b]:
-                        self.map.makeMove((5,1))
+                        self.cube.makeMove((5,1))
                         print("B")
                     if keys[pygame.K_x]:
-                        self.map.makeMove((6,1))
+                        self.cube.makeMove((6,1))
                         print("X")
                     if keys[pygame.K_y]:
-                        self.map.makeMove((7,1))
+                        self.cube.makeMove((7,1))
                         print("Y")
                     if keys[pygame.K_z]:
-                        self.map.makeMove((8,1))
+                        self.cube.makeMove((8,1))
                         print("Z")
 
             '''
@@ -157,7 +158,7 @@ class GUI():
             '''
 
         if self.threeD != None:
-            self.threeD.update(self.map.state, [(255, 0, 0), (255, 255, 0), (0, 255, 0), (255, 255, 255), (0, 0, 255), (255, 165, 0)])
+            self.threeD.update(self.cube.state, [(255, 0, 0), (255, 255, 0), (0, 255, 0), (255, 255, 255), (0, 0, 255), (255, 165, 0)])
             self.threeD.draw()
         else:
             self.screen.fill((0, 0, 0))
@@ -166,7 +167,7 @@ class GUI():
             pygame.display.update()
 
     def draw2DCube(self):
-        cube = self.map.state
+        cube = self.cube.state
         #print(cube)
         # Cube size param
         offset = (200, 25)
@@ -197,9 +198,9 @@ class GUI():
 
 if __name__ == "__main__":
     print('Testing GUI')
-    m = Map(3)
+    m = Cube(3)
 
-    g = GUI(map=m, player=True, width=800, height=600, threeD=True)
+    g = GUI(cube=m, player=True, width=800, height=600, threeD=True)
 
     g.update()
 
@@ -207,7 +208,7 @@ if __name__ == "__main__":
 
     #m.makeMove((0,2))
 
-    #g.scramble(10, 0.3)
+    g.scramble(10, 0.3)
     m.printMap()
 
     while True:

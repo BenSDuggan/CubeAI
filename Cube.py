@@ -1,8 +1,15 @@
+'''
+    Team 4 - Ben Duggan & Connor Altic
+    11/3/18
+    Class with main gui class
+'''
 
-class Map:
+import base64, math, random
 
+class Cube:
     # constructor takes n for size of cube
-    def __init__(self, n):
+    def __init__(self, n=2, hash=None):
+        self.num_moves = 0
         self.size = n
         self.state = [[],[],[],[],[],[]]
         for i in range(6):
@@ -21,6 +28,34 @@ class Map:
                 if self.state[i][j] != self.state[i][j + 1]:
                     return False
         return True
+
+    # scramble takes a length and returns list of moves
+    # in the scramble, scramble won't turn the same layer
+    # or opposite layers sequentially
+    def scramble(self, length):
+        moves = []
+        for i in range(length):
+            move = (random.randint(0, 5), random.randint(1, 3))
+            while i >= 1 and (moves[i - 1][0] == move[0] or move[0] == self.opposite(moves[i - 1][0])):
+                move = (random.randint(0, 5), random.randint(1, 3))
+            moves.append(move)
+            self.makeMove(move)
+
+    @staticmethod
+    def opposite(i):
+        if i == 0:
+            return 5
+        if i == 1:
+            return 3
+        if i == 2:
+            return 4
+        if i == 3:
+            return 1
+        if i == 4:
+            return 2
+        if i == 5:
+            return 0
+
     # turnFront rotates the front layer of the cube
     # pi/2 clockwise, it takes n which is which
     # front layer to rotate, 0 being the face
@@ -180,6 +215,7 @@ class Map:
     # makeMove takes a move which is a tuple of the slice
     # to turn and how many times to turn it
     def makeMove(self, move):
+        self.num_moves += 1
         for i in range(move[1]):
             if move[0] % 6 == 0:
                 self.turnFront(int(move[0]/6))
@@ -193,6 +229,7 @@ class Map:
                 self.turnLeft(int((move[0] - 4) / 6))
             if move[0] % 6 == 5:
                 self.turnBack(int((move[0] - 5) / 6))
+        return self
 
 
     # asRows takes int of which face to transform
@@ -284,15 +321,79 @@ class Map:
             for j in rows:
                 print(j)
 
+    def children(self,depth=None):
+        children = []
+        for i in range(self.moves):
+            children.append(self.__copy__().makeMove((i,1)))
+            if depth == 'all' or depth == 'prime':
+                children.append(self.__copy__().makeMove((i,3)))
+            if depth == 'all' or depth == 'double':
+                children.append(self.__copy__().makeMove((i,2)))
+        return children
+
+    def __copy__(self):
+        m = Cube(self.size)
+        m.num_moves = self.num_moves
+        m.state = self.state.copy()
+        return m
+
+    def __hash__(self):
+        hash = 0
+        count = 0
+        for i in self.state:
+            for j in i:
+                hash += j*(6**count)
+                count += 1
+        #return BaseSixEncoding().encode(hash)
+        return hash
+
+    def decode(self, hash):
+        #hash_10 = BaseSixEncoding().decode(hash)
+        hash_10 = hash
+        state = [[],[],[],[],[],[]]
+        num_face_cublets = math.ceil(math.log(hash_10, 6))//6
+
+        for i in range(6):
+            for j in range(num_face_cublets):
+                state[i].append(int(hash_10%6))
+                hash_10 = int(hash_10//6)
+        return state
+
+class BaseSixEncoding:
+    def __init__(self):
+        self.start_index = 32
+        self.encoding_length = 94
+
+    def encode(self, num):
+        num = int(num)
+        encoded = ""
+        while num > 0:
+            encoded = chr(self.start_index + int(num%self.encoding_length)) + encoded
+            num = int(num//self.encoding_length)
+        return encoded
+
+    def decode(self, encoding):
+        decoded = int(0)
+        count = 0
+        while len(encoding) > 0:
+            decoded += (ord(encoding[-1])-self.start_index)*int((self.encoding_length**count))
+            encoding = encoding[:-1]
+            count += 1
+        return decoded
 
 if __name__ == '__main__':
-    m = Map(2)
-    m.printMap()
-    for i in range(1):
-        #m.makeMove((0,1))
-        m.makeMove((2,1))
+    m = Cube(2)
+    #m.printMap()
 
-    m.printMap()
+    print(m.children())
+
+    hash = m.__hash__()
+    print(hash)
+    print(m.decode(hash))
+
+    for i in range(0):
+        if i != BaseSixEncoding().decode(BaseSixEncoding().encode(i)):
+            print("Error: " + str(i))
 
 '''
 
