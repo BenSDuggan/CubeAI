@@ -4,7 +4,7 @@
     Class with main gui class
 '''
 
-import base64, math, random
+import math, random
 
 class Cube:
     # constructor takes n for size of cube
@@ -359,7 +359,7 @@ class Cube:
                 hash_10 = int(hash_10//6)
         return state
 
-class BaseSixEncoding:
+class Base94Encoding:
     def __init__(self):
         self.start_index = 32
         self.encoding_length = 94
@@ -392,7 +392,7 @@ if __name__ == '__main__':
     print(m.decode(hash))
 
     for i in range(0):
-        if i != BaseSixEncoding().decode(BaseSixEncoding().encode(i)):
+        if i != Base94Encoding().decode(Base94Encoding().encode(i)):
             print("Error: " + str(i))
 
 '''
