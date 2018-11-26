@@ -12,6 +12,7 @@ CSCI-B 351 final project with the goal of making an AI to solve a 2x2 cube and p
 ├── beginnersmethod.py      # ''unfinished'' simple solving method
 ├── Cube.py                 # The class which models the cube
 ├── debug.py                # Tools to debug unsuccessful solves
+├── Heuristic.py            # Heuristics for solving the cube
 ├── main.py                 # The main python script which runs all others and serves as the entry point
 ├── project files           # Files needed to submit this project such as proposals and formal documentation
 └── unused                  # Contains currently unused files
