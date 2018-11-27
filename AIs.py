@@ -4,7 +4,10 @@
     Class that contains all of the AIs used
 '''
 
+import heapq
 from Cube import *
+from Heuristic import *
+from State import *
 
 '''
 First AI tested.  Not an efficient AI as no heuristic is used and there is a large branching factor ~3*n
@@ -46,7 +49,25 @@ class A_star:
         self.cube = cube
 
     def solve(self):
-        pass
+        goal_state = State(Cube(self.cube.size), None, 0, 0)
+        explored = set()
+        fringe = [State(self.cube, None, 0, 0)]
+        heapq.heapify(fringe)
+
+        print("starting solve")
+        while len(fringe) > 0:
+            current_state = heapq.heappop(fringe)
+            print(current_state)
+            if current_state.current_state.isSolved():
+                return str(current_state)
+            if current_state.__hash__() in explored:
+                continue
+            for i in current_state.current_state.children('prime'):
+                if i.__hash__() not in explored:
+                    new_addition = State(i, current_state, current_state.depth+1+Heuristic.hammingDistance(i), current_state.depth+1)
+                    heapq.heappush(fringe, new_addition)
+                    explored.add(current_state.__hash__())
+
 
 class Bidirectional_A_star:
     def __init__(self, cube):

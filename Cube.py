@@ -9,7 +9,6 @@ import math, random
 class Cube:
     # constructor takes n for size of cube
     def __init__(self, n=2, hash=None):
-        self.num_moves = 0
         self.size = n
         self.state = [[],[],[],[],[],[]]
         for i in range(6):
@@ -40,6 +39,14 @@ class Cube:
                 move = (random.randint(0, 5), random.randint(1, 3))
             moves.append(move)
             self.makeMove(move)
+
+    def simple_scramble(self, length):
+        moves = []
+        for i in range(length):
+            #moves.append((random.randint(0,self.moves), random.randint(1,3)))
+            moves.append((random.randint(0,self.moves), 1))
+            self.makeMove(moves[-1])
+        return moves
 
     @staticmethod
     def opposite(i):
@@ -215,7 +222,6 @@ class Cube:
     # makeMove takes a move which is a tuple of the slice
     # to turn and how many times to turn it
     def makeMove(self, move):
-        self.num_moves += 1
         for i in range(move[1]):
             if move[0] % 6 == 0:
                 self.turnFront(int(move[0]/6))
@@ -333,21 +339,25 @@ class Cube:
 
     def __copy__(self):
         m = Cube(self.size)
-        m.num_moves = self.num_moves
         m.state = self.state.copy()
         return m
 
     def __hash__(self):
-        hash = 0
+        return Cube.encode(self.state)
+
+    @staticmethod
+    def encode(state):
+        encoding = 0
         count = 0
-        for i in self.state:
+        for i in state:
             for j in i:
-                hash += j*(6**count)
+                encoding += j*(6**count)
                 count += 1
         #return BaseSixEncoding().encode(hash)
-        return hash
+        return encoding
 
-    def decode(self, hash):
+    @staticmethod
+    def decode(hash):
         #hash_10 = BaseSixEncoding().decode(hash)
         hash_10 = hash
         state = [[],[],[],[],[],[]]
@@ -389,7 +399,7 @@ if __name__ == '__main__':
 
     hash = m.__hash__()
     print(hash)
-    print(m.decode(hash))
+    print(m.decode(4314954162759849540))
 
     for i in range(0):
         if i != Base94Encoding().decode(Base94Encoding().encode(i)):

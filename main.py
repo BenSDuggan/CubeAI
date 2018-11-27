@@ -23,22 +23,23 @@ def ai(type, n):
         m = Cube(n)
         m.scramble(10) # Not good with heigh scrambles (>4)
         ai = BFS(m)
-        ai.solve()
+        print(ai.solve())
     elif type == 'a*':
         m = Cube(n)
-        m.scramble(12)
+        print(m.simple_scramble(3))
+        print('Scramble hash: ' + str(m.__hash__()))
         ai = A_star(m)
-        ai.solve()
+        print(ai.solve())
     elif type == 'bia*':
         m = Cube(n)
         m.scramble(12)
         ai = Bidirectional_A_star(m)
-        ai.solve()
+        print(ai.solve())
     else:
         print("Not sure what you want")
 
 if __name__ == '__main__':
-    x,n = None,None
+    x,n = 'a*',2
     if len(sys.argv) > 2:
         x = sys.argv[1]
         n = sys.argv[2]
