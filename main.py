@@ -4,6 +4,7 @@
     Class with main gui class
 '''
 
+import time
 from gui.main_gui import *
 from AIs import *
 
@@ -35,11 +36,41 @@ def ai(type, n):
         m.scramble(12)
         ai = Bidirectional_A_star(m)
         print(ai.solve())
+    elif type == 'ida*':
+        m = Cube(n)
+        #m.scramble(3)
+        m.makeMove((0,3))
+        #m.makeMove((2,1))
+        ai = IDA_Star(m)
+        path = ai.solve()[0]
+        for i in path:
+            print(i.state)
+        '''
+        g = GUI(cube=m, width=800, height=600, threeD=False)
+        move_list = []
+        for i in path:
+            move_list.append((i.move, i.current_state.__hash__()))
+        g.moveList(move_list)
+        while True:
+            g.update()
+        '''
+        #print(ai.solve())
+    elif type == 'maxi':
+        m = Cube(n)
+        print('scramble: ' + str(m.scramble(4)))
+        #m.makeMove((0,3))
+        #m.makeMove((4,3))
+        ai = Maxi(m)
+        print('Starting ai:')
+        start_time = time.time()
+        result = ai.solve(4)
+        print('AI took: ' + str(time.time()-start_time) + ' seconds')
+        print(result)
     else:
         print("Not sure what you want")
 
 if __name__ == '__main__':
-    x,n = 'a*',2
+    x,n = 'ida*',2
     if len(sys.argv) > 2:
         x = sys.argv[1]
         n = sys.argv[2]
@@ -49,6 +80,10 @@ if __name__ == '__main__':
         x = input()
         print("what n?")
         n = int(input())
+
+    m = Cube(2)
+    m.state = m.decode(238544208514371525)
+    print('hash: ' + str(Heuristic.hammingDistance(m)))
 
     assert type(x) == type('a') and type(n) == type(1)
 

@@ -13,6 +13,9 @@ class GUI():
     def __init__(self, cube, player=True, width=None, height=None, threeD=True):
         self.cube = cube
         self.player = player
+        self.state_list = None
+        self.move_history = []
+        self.info_box_text = [[('State list: ', (0,0,0))], [('Move history: ',(0,0,0))], [('Key: ',(0,0,0))]]
 
         self.buttons = [[["F ", pygame.Rect(100, 100, 50, 50)], ["F2", pygame.Rect(100, 100, 50, 50)], ["F'", pygame.Rect(100, 100, 50, 50)]]]
 
@@ -26,7 +29,7 @@ class GUI():
         pygame.time.Clock().tick(50)
 
         pygame.font.init()
-        self.font = pygame.font.SysFont('Comic Sans MS', 30)
+        self.font = pygame.font.SysFont('Arial', 15)
 
         if threeD:
             self.threeD = ThreeD_Cube(self.screen)
@@ -59,111 +62,85 @@ class GUI():
                     else:
                         self.threeD = ThreeD_Cube(self.screen)
 
+                # Arrow keys
+                if keys[pygame.K_RIGHT]:
+                    if self.state_list != None and self.state_num < len(self.state_list)-1:
+                        self.state_num += 1
+                        self.makeMove(self.state_list[self.state_num][0])
+                if keys[pygame.K_LEFT]:
+                    if self.state_list != None and self.state_num > 0:
+                        self.state_num -= 1
+                        self.makeMove(self.state_list[self.state_num][0])
+
                 # Prime
                 if keys[pygame.K_1]:
                     if keys[pygame.K_f]:
-                        self.cube.makeMove((0,3))
-                        self.cube.printMap()
-                        print("F'")
+                        self.makeMove((0,3))
                     if keys[pygame.K_u]:
-                        self.cube.makeMove((1,3))
-                        print("U'")
+                        self.makeMove((1,3))
                     if keys[pygame.K_r]:
-                        self.cube.makeMove((2,3))
-                        print("R'")
+                        self.makeMove((2,3))
                     if keys[pygame.K_d]:
-                        self.cube.makeMove((3,3))
-                        print("D'")
+                        self.makeMove((3,3))
                     if keys[pygame.K_l]:
-                        self.cube.makeMove((4,3))
-                        print("L'")
+                        self.makeMove((4,3))
                     if keys[pygame.K_b]:
-                        self.cube.makeMove((5,3))
-                        print("B'")
+                        self.makeMove((5,3))
                     if keys[pygame.K_x]:
-                        self.cube.makeMove((6,3))
-                        print("X'")
+                        self.makeMove((6,3))
                     if keys[pygame.K_y]:
-                        self.cube.makeMove((7,3))
-                        print("Y'")
+                        self.makeMove((7,3))
                     if keys[pygame.K_z]:
-                        self.cube.makeMove((8,3))
-                        print("Z'")
-
+                        self.makeMove((8,3))
                 # Move twice
                 elif keys[pygame.K_2]:
                     if keys[pygame.K_f]:
-                        self.cube.makeMove((0,2))
-                        self.cube.printMap()
-                        print("F2")
+                        self.makeMove((0,2))
                     if keys[pygame.K_u]:
-                        self.cube.makeMove((1,2))
-                        print("U2")
+                        self.makeMove((1,2))
                     if keys[pygame.K_r]:
-                        self.cube.makeMove((2,2))
-                        print("R2")
+                        self.makeMove((2,2))
                     if keys[pygame.K_d]:
-                        self.cube.makeMove((3,2))
-                        print("D2")
+                        self.makeMove((3,2))
                     if keys[pygame.K_l]:
-                        self.cube.makeMove((4,2))
-                        print("L2")
+                        self.makeMove((4,2))
                     if keys[pygame.K_b]:
-                        self.cube.makeMove((5,2))
-                        print("B2")
+                        self.makeMove((5,2))
                     if keys[pygame.K_x]:
-                        self.cube.makeMove((6,2))
-                        print("X2")
+                        self.makeMove((6,2))
                     if keys[pygame.K_y]:
-                        self.cube.makeMove((7,2))
-                        print("Y2")
+                        self.makeMove((7,2))
                     if keys[pygame.K_z]:
-                        self.cube.makeMove((8,2))
-                        print("Z2")
+                        self.makeMove((8,2))
                 else:
                     if keys[pygame.K_f]:
-                        self.cube.makeMove((0,1))
-                        self.cube.printMap()
-                        print("F")
+                        self.makeMove((0,1))
                     if keys[pygame.K_u]:
-                        self.cube.makeMove((1,1))
-                        print("U")
+                        self.makeMove((1,1))
                     if keys[pygame.K_r]:
-                        self.cube.makeMove((2,1))
-                        print("R")
+                        self.makeMove((2,1))
                     if keys[pygame.K_d]:
-                        self.cube.makeMove((3,1))
-                        print("D")
+                        self.makeMove((3,1))
                     if keys[pygame.K_l]:
-                        self.cube.makeMove((4,1))
-                        print("L")
+                        self.makeMove((4,1))
                     if keys[pygame.K_b]:
-                        self.cube.makeMove((5,1))
-                        print("B")
+                        self.makeMove((5,1))
                     if keys[pygame.K_x]:
-                        self.cube.makeMove((6,1))
-                        print("X")
+                        self.makeMove((6,1))
                     if keys[pygame.K_y]:
-                        self.cube.makeMove((7,1))
-                        print("Y")
+                        self.makeMove((7,1))
                     if keys[pygame.K_z]:
-                        self.cube.makeMove((8,1))
-                        print("Z")
-
-            '''
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for i in range(len(self.buttons)):
-                    if self.buttons[i][1].collidepoint(event.pos):
-                        print('Collission')
-            '''
+                        self.makeMove((8,1))
 
         if self.threeD != None:
             self.threeD.update(self.cube.state, [(255, 0, 0), (255, 255, 0), (0, 255, 0), (255, 255, 255), (0, 0, 255), (255, 165, 0)])
             self.threeD.draw()
+            self.renderText()
+            pygame.display.update()
         else:
             self.screen.fill((0, 0, 0))
             self.draw2DCube()
-            self.drawButtons()
+            self.renderText()
             pygame.display.update()
 
     def draw2DCube(self):
@@ -190,17 +167,83 @@ class GUI():
                     pygame.draw.rect(self.screen, colors[cube[c][count]], [offset[0]+f[0]+j*(cubeletSize+gap), offset[1]+f[1]+i*(cubeletSize+gap), cubeletSize, cubeletSize])
                     count += 1
 
-    def drawButtons(self):
-        pass
-        #for i in self.buttons:
-            #pygame.draw.rect(self.screen, (255,255,255), i[1])
+    def renderText(self):
+        rect = pygame.Rect(0,pygame.display.get_surface().get_size()[1]-100,pygame.display.get_surface().get_size()[0],100)
+        pygame.draw.rect(self.screen, (255,255,255), rect)
+
+        lineSpacing = -2
+        # get the height of the font
+        fontHeight = self.font.size("Tg")[1]
+
+        y = rect.top - fontHeight - lineSpacing
+
+        for i in self.info_box_text:
+            x = 0
+            y += fontHeight + lineSpacing
+            for j in i:
+                text = j[0]
+                color = j[1]
+                while text:
+                    i = 1
+                    # determine if the row of text will be outside our area
+                    if y + fontHeight > rect.bottom:
+                        break
+                    # determine maximum width of line
+                    while self.font.size(text[:i])[0] + x < rect.width and i < len(text):
+                        i += 1
+
+                    # if we've wrapped the text, then adjust the wrap to the last word
+                    if i < len(text):
+                        i = text.rfind(" ", 0, i) + 1
+
+                    image = self.font.render(text[:i], False, color)
+
+                    self.screen.blit(image, (rect.left+x, y))
+
+                    x += self.font.size(text[:i])[0]
+
+                    if x >= rect.width or i < len(text):
+                        x = 0
+                        y += fontHeight + lineSpacing
+
+                    # remove the text we just blitted
+                    text = text[i:]
+
+
+    def makeMove(self, move):
+        self.move_history.append(move)
+        if self.state_list != None and move == self.state_list[self.state_num]:
+            print('move num')
+
+        self.cube.makeMove(move)
+        print('Made move: ' + str(move))
+
+        # Add to move history
+        if len(self.info_box_text[1]) >= 3:
+            # There is at least 2 moves present
+            if len(self.info_box_text[1][1][0]) == 0:
+                self.info_box_text[1][1] = (self.info_box_text[1][2][0] + ', ', (0,0,0))
+            else:
+                self.info_box_text[1][1] = (self.info_box_text[1][1][0] + self.info_box_text[1][2][0] + ', ', (0,0,0))
+            self.info_box_text[1][2] = (str(move), (0,0,255))
+        else:
+            # This is the first move
+            self.info_box_text[1].append(('', (0,0,0)))
+            self.info_box_text[1].append((str(move), (0,0,255)))
+
+    def moveList(self, states):
+        self.cube.state = self.cube.decode(states[0][1])
+        self.state_list = states
+        self.state_num = 0
+        self.info_box_text[0].append((str(states), (0,0,0)))
 
 
 if __name__ == "__main__":
     print('Testing GUI')
-    m = Cube(3)
+    m = Cube(2)
 
-    g = GUI(cube=m, player=True, width=800, height=600, threeD=True)
+    g = GUI(cube=m, width=800, height=600, threeD=False)
+    g.moveList([((1,1),4314954162759849540), ((1,3),4314954162759849540)])
 
     g.update()
 
@@ -208,7 +251,7 @@ if __name__ == "__main__":
 
     #m.makeMove((0,2))
 
-    g.scramble(10, 0.3)
+    #g.scramble(10, 0.3)
     m.printMap()
 
     while True:

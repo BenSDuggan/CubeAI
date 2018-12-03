@@ -35,12 +35,12 @@ class BFS:
             for i in fringe:
                 children = fringe[i].children('prime')
                 for j in children:
-                    if j.__hash__() == goal_state:
+                    if j[1].__hash__() == goal_state:
                         print('Found goal at depth ' + str(depth))
                         return 'yes'
-                    if j.__hash__() not in fringe and j.__hash__() not in seen:
-                        new_fringe[j.__hash__()] = j
-                        seen.add(j.__hash__())
+                    if j[1].__hash__() not in fringe and j[1].__hash__() not in seen:
+                        new_fringe[j[1].__hash__()] = j[1]
+                        seen.add(j[1].__hash__())
             fringe = new_fringe
             print(len(fringe))
 
@@ -64,7 +64,7 @@ class A_star:
                 continue
             for i in current_state.current_state.children('prime'):
                 if i.__hash__() not in explored:
-                    new_addition = State(i, current_state, current_state.depth+1+Heuristic.hammingDistance(i), current_state.depth+1)
+                    new_addition = State(i[1], current_state, current_state.depth+1+Heuristic.hammingDistance(i[1]), current_state.depth+1, i[0])
                     heapq.heappush(fringe, new_addition)
                     explored.add(current_state.__hash__())
 
@@ -75,3 +75,74 @@ class Bidirectional_A_star:
 
     def solve(self):
         pass
+
+class IDA_Star:
+    def __init__(self, cube):
+        self.cube = cube
+
+    def solve(self):
+        bound = Heuristic.simpleHeuristic(self.cube)
+        path = [self.cube]
+        while True:
+            t = self.search(path, 0, bound)
+            if t[0]:
+                return (path, bound)
+            if t[2] == float('inf'):
+                return [], None
+            path.append(t[1][len(path)])
+            bound = t[2]
+            print(path)
+
+    def search(self, path, g, bound):
+        node = path[-1]
+        f = g + Heuristic.simpleHeuristic(node)
+        if f > bound:
+            return False, path, f
+        if node.isSolved():
+            return True, path, f
+        min = False, path, float('inf')
+        for succ in node.children():
+            if succ[1] not in path:
+                path.append(succ)
+                t = self.search(path, g + 1, bound)
+                if t[0]:
+                    return t
+                if t[1] < min[2]:
+                    min = t[0], path, t[1]
+                del path[-1]
+        return False, path, min
+
+class Maxi:
+    def __init__(self, cube):
+        self.cube = cube
+
+    def solve(self, depth=2):
+        path = []
+        while True:
+            move = self.maxi(self.cube, depth)
+            print('Making move: ' + str(move[0]) + ' with score of ' + str(move[1]))
+            self.cube.makeMove(move[0])
+            path.append(move)
+            if self.cube.isSolved():
+                return path
+
+    def maxi(self, cube, depth):
+        if cube.isSolved():
+            return None, -100 * (depth+1)
+
+        if depth == 0:
+            return None, Heuristic.hammingDistance(cube)
+
+        best_move = None
+        best_score = None
+
+        for move in cube.children('all'):
+            score = self.maxi(move[1], depth-1)[1]
+
+            print("depth:", str(depth), "; score:", score, '; move:', str(move[0]), '; cube: ', str(move[1].__hash__()), '; heuristic: ', str(Heuristic.hammingDistance(move[1])))
+
+            if best_move is None or score < best_score:
+                best_score = score
+                best_move = move[0]
+
+        return best_move, best_score

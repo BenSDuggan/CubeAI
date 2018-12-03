@@ -7,11 +7,12 @@
 from Cube import *
 
 class State:
-    def __init__(self, current_state, parent_state, fValue, depth):
+    def __init__(self, current_state, parent_state, fValue, depth, move):
         self.current_state = current_state
         self.parent_state = parent_state
         self.fValue = fValue
         self.depth = depth
+        self.move = move
 
     # checks if two States are the same
     def __eq__(self, other):
@@ -30,4 +31,4 @@ class State:
         return self.current_state.__hash__()
 
     def __str__(self):
-        return "depth:" + str(self.depth) + "; fValue:" + str(self.fValue) + "; current_state:" + str(self.current_state.__hash__()) + '; solved:' + str(self.current_state.isSolved())
+        return "depth:" + str(self.depth) + "; fValue:" + str(self.fValue) + "; current_state:" + str(self.current_state.__hash__()) + '; move:' + str(self.move) + '; solved:' + str(self.current_state.isSolved())

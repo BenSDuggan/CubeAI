@@ -162,7 +162,7 @@ class Simulation:
         if self.autoRotate:
             self.theta = (self.theta[0]+1, self.theta[1]+1)
 
-        pygame.display.flip()
+        #pygame.display.flip()
 
 
 class ThreeD_Cube:

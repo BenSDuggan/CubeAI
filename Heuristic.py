@@ -28,15 +28,20 @@ class Heuristic:
         return 100*6 - score
 
     @staticmethod
-    def hammingDistance(state):
-        current_state = state.state
-        goal_state = Cube(state.size).state
-        score = 6 * state.size**2
+    def hammingDistance(cube):
+        current_state = cube.state
+        goal_state = Cube(cube.size).state
+        score = 6 * cube.size**2
         for i in range(6):
             for j in range(len(current_state[i])):
                 if current_state[i] == goal_state[i]:
                     score -= 1
         return score
+
+    # https://stackoverflow.com/questions/36490073/heuristic-for-rubiks-cube
+    @staticmethod
+    def manhattanDistance(cube):
+        pass
 
 
 

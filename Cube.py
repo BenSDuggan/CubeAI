@@ -39,6 +39,7 @@ class Cube:
                 move = (random.randint(0, 5), random.randint(1, 3))
             moves.append(move)
             self.makeMove(move)
+        return moves
 
     def simple_scramble(self, length):
         moves = []
@@ -330,11 +331,11 @@ class Cube:
     def children(self,depth=None):
         children = []
         for i in range(self.moves):
-            children.append(self.__copy__().makeMove((i,1)))
+            children.append(((i,1),self.__copy__().makeMove((i,1))))
             if depth == 'all' or depth == 'prime':
-                children.append(self.__copy__().makeMove((i,3)))
+                children.append(((i,3),self.__copy__().makeMove((i,3))))
             if depth == 'all' or depth == 'double':
-                children.append(self.__copy__().makeMove((i,2)))
+                children.append(((i,2), self.__copy__().makeMove((i,2))))
         return children
 
     def __copy__(self):
@@ -399,7 +400,8 @@ if __name__ == '__main__':
 
     hash = m.__hash__()
     print(hash)
-    print(m.decode(4314954162759849540))
+    print(m.decode(238544208514371525))
+
 
     for i in range(0):
         if i != Base94Encoding().decode(Base94Encoding().encode(i)):
