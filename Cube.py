@@ -5,6 +5,7 @@
 '''
 
 import math, random
+from ManhattanCube import*
 
 class Cube:
     # constructor takes n for size of cube
@@ -393,19 +394,10 @@ class Base94Encoding:
         return decoded
 
 if __name__ == '__main__':
-    m = Cube(2)
-    #m.printMap()
-
-    print(m.children())
-
-    hash = m.__hash__()
-    print(hash)
-    print(m.decode(238544208514371525))
-
-
-    for i in range(0):
-        if i != Base94Encoding().decode(Base94Encoding().encode(i)):
-            print("Error: " + str(i))
+    cube = Cube(2)
+    print(cube.scramble(5))
+    n = ManhattanCube(cube)
+    print(n.cube)
 
 '''
 

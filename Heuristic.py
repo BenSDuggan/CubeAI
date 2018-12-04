@@ -49,99 +49,102 @@ class myHeuristic:
         pass
 
     @staticmethod
-    def scoreCube(self, this):
-        cube = cube(this)
-        score = self.scorePiece(cube, 0)
+    def scoreCube(this):
+        c = ManhattanCube(this)
+        score = myHeuristic.scorePiece(c, 0)
+        print("~~")
+        print(c.cube)
         this.makeMove((1,1))
         this.makeMove((3,3))
-        cube = cube(this)
-        score = score + self.scorePiece(cube, 1)
+        c = ManhattanCube(this)
+        score = score + myHeuristic.scorePiece(c, 1)
         this.makeMove((1,1))
         this.makeMove((3,3))
-        cube = cube(this)
-        score = score + self.scorePiece(cube, 2)
+        c = ManhattanCube(this)
+        score = score + myHeuristic.scorePiece(c, 2)
         this.makeMove((1,1))
         this.makeMove((3,3))
-        score = score + self.scorePiece(cube, 3)
+        score = score + myHeuristic.scorePiece(c, 3)
         this.makeMove((1,1))
         this.makeMove((3,3))
         this.makeMove((4,2))
         this.makeMove((2,2))
         this.makeMove((1,3))
         this.makeMove((3,1))
-        cube = cube(this)
-        score = score + self.scorePiece(cube, 4)
+        c = ManhattanCube(this)
+        score = score + myHeuristic.scorePiece(c, 4)
         this.makeMove((1,3))
         this.makeMove((3,1))
-        cube = cube(this)
-        score = score + self.scorePiece(cube, 5)
+        cube = ManhattanCube(this)
+        score = score + myHeuristic.scorePiece(c, 5)
         this.makeMove((1,3))
         this.makeMove((3,1))
-        cube = cube(this)
-        score = score + self.scorePiece(cube, 6)
+        c = ManhattanCube(this)
+        score = score + myHeuristic.scorePiece(c, 6)
         this.makeMove((1,3))
         this.makeMove((3,1))
-        cube = cube(this)
-        return score + self.scorePiece(cube,7)
+        c = ManhattanCube(this)
+        return score + myHeuristic.scorePiece(cube,7)
 
-    def scorePiece(self, c, p):
+    @staticmethod
+    def scorePiece(c, p):
         index = c.findPiece(p)
         case = c.cube[index]
-        if case.id == 0:
-            if case.orr == 0:
+        if case[0] == 0:
+            if case[1] == 0:
                 return 0
-            if case.orr == 1:
+            if case[1] == 1:
                 return 2
-            if case.orr == 2:
+            if case[1] == 2:
                 return 2
-        if case.id == 1:
-            if case.orr == 0:
+        if case[0] == 1:
+            if case[1] == 0:
                 return 1
-            if case.orr == 1:
+            if case[1] == 1:
                 return 1
-            if case.orr == 2:
+            if case[1] == 2:
                 return 2
-        if case.id == 2:
-            if case.orr == 0:
+        if case[0] == 2:
+            if case[1] == 0:
                 return 1
-            if case.orr == 1:
+            if case[1] == 1:
                 return 2
-            if case.orr == 2:
+            if case[1] == 2:
                 return 2
-        if case.id == 3:
-            if case.orr == 0:
+        if case[0] == 3:
+            if case[1] == 0:
                 return 1
-            if case.orr == 1:
+            if case[1] == 1:
                 return 2
-            if case.orr == 2:
+            if case[1] == 2:
                 return 1
-        if case.id == 4:
-            if case.orr == 0:
+        if case[0] == 4:
+            if case[1] == 0:
                 return 2
-            if case.orr == 1:
+            if case[1] == 1:
                 return 1
-            if case.orr == 2:
+            if case[1] == 2:
                 return 1
-        if case.id == 5:
-            if case.orr == 0:
+        if case[0] == 5:
+            if case[1] == 0:
                 return 2
-            if case.orr == 1:
+            if case[1] == 1:
                 return 2
-            if case.orr == 2:
+            if case[1] == 2:
                 return 2
-        if case.id == 6:
-            if case.orr == 0:
+        if case[0] == 6:
+            if case[1] == 0:
                 return 2
-            if case.orr == 1:
+            if case[1] == 1:
                 return 2
-            if case.orr == 2:
+            if case[1] == 2:
                 return 2
-        if case.id == 7:
-            if case.orr == 0:
+        if case[0] == 7:
+            if case[1] == 0:
                 return 1
-            if case.orr == 1:
+            if case[1] == 1:
                 return 2
-            if case.orr == 2:
+            if case[1] == 2:
                 return 2
 
 
@@ -150,4 +153,6 @@ if __name__ == '__main__':
     #print(Heuristic.simpleHeuristic())
     cube = Cube(2)
     cube.makeMove((0,1))
+    # cube.makeMove((1,1))
+    # cube.makeMove((3,3))
     print("Manhattan distance: " + str(Heuristic.manhattanDistance(cube)))

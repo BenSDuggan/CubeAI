@@ -1,5 +1,5 @@
 from Cube import*
-class cube:
+class ManhattanCube:
 
     def __init__(self, map):
         temp = []
