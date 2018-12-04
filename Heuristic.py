@@ -5,6 +5,7 @@
 '''
 
 from Cube import *
+from ManhattanCube import *
 
 class Heuristic:
 
@@ -41,9 +42,112 @@ class Heuristic:
     # https://stackoverflow.com/questions/36490073/heuristic-for-rubiks-cube
     @staticmethod
     def manhattanDistance(cube):
+        return myHeuristic.scoreCube(cube)
+
+class myHeuristic:
+    def __init__(self):
         pass
 
+    @staticmethod
+    def scoreCube(self, this):
+        cube = cube(this)
+        score = self.scorePiece(cube, 0)
+        this.makeMove((1,1))
+        this.makeMove((3,3))
+        cube = cube(this)
+        score = score + self.scorePiece(cube, 1)
+        this.makeMove((1,1))
+        this.makeMove((3,3))
+        cube = cube(this)
+        score = score + self.scorePiece(cube, 2)
+        this.makeMove((1,1))
+        this.makeMove((3,3))
+        score = score + self.scorePiece(cube, 3)
+        this.makeMove((1,1))
+        this.makeMove((3,3))
+        this.makeMove((4,2))
+        this.makeMove((2,2))
+        this.makeMove((1,3))
+        this.makeMove((3,1))
+        cube = cube(this)
+        score = score + self.scorePiece(cube, 4)
+        this.makeMove((1,3))
+        this.makeMove((3,1))
+        cube = cube(this)
+        score = score + self.scorePiece(cube, 5)
+        this.makeMove((1,3))
+        this.makeMove((3,1))
+        cube = cube(this)
+        score = score + self.scorePiece(cube, 6)
+        this.makeMove((1,3))
+        this.makeMove((3,1))
+        cube = cube(this)
+        return score + self.scorePiece(cube,7)
+
+    def scorePiece(self, c, p):
+        index = c.findPiece(p)
+        case = c.cube[index]
+        if case.id == 0:
+            if case.orr == 0:
+                return 0
+            if case.orr == 1:
+                return 2
+            if case.orr == 2:
+                return 2
+        if case.id == 1:
+            if case.orr == 0:
+                return 1
+            if case.orr == 1:
+                return 1
+            if case.orr == 2:
+                return 2
+        if case.id == 2:
+            if case.orr == 0:
+                return 1
+            if case.orr == 1:
+                return 2
+            if case.orr == 2:
+                return 2
+        if case.id == 3:
+            if case.orr == 0:
+                return 1
+            if case.orr == 1:
+                return 2
+            if case.orr == 2:
+                return 1
+        if case.id == 4:
+            if case.orr == 0:
+                return 2
+            if case.orr == 1:
+                return 1
+            if case.orr == 2:
+                return 1
+        if case.id == 5:
+            if case.orr == 0:
+                return 2
+            if case.orr == 1:
+                return 2
+            if case.orr == 2:
+                return 2
+        if case.id == 6:
+            if case.orr == 0:
+                return 2
+            if case.orr == 1:
+                return 2
+            if case.orr == 2:
+                return 2
+        if case.id == 7:
+            if case.orr == 0:
+                return 1
+            if case.orr == 1:
+                return 2
+            if case.orr == 2:
+                return 2
 
 
+# Run python Heuristic.py
 if __name__ == '__main__':
-    print(Heuristic.simpleHeuristic([]))
+    #print(Heuristic.simpleHeuristic())
+    cube = Cube(2)
+    cube.makeMove((0,1))
+    print("Manhattan distance: " + str(Heuristic.manhattanDistance(cube)))

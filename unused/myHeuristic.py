@@ -1,8 +1,6 @@
-from Cube import*
-from cube import*
+from unused.cube import *
 
 class myHeuristic:
-
     def __init__(self, c):
         self.state = c
 
