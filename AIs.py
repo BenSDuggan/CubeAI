@@ -39,7 +39,7 @@ class BFS:
                 for j in fringe[i][0].children('all'):
                     if j[1].__hash__() == goal_state:
                         print('Found goal at depth ' + str(depth))
-                        return self.find_path(seen, (self.cube, fringe[i][0], j[0]))
+                        return self.find_path(seen, (j[1], fringe[i][0], j[0], -1))
                     if j[1].__hash__() not in fringe and j[1].__hash__() not in seen:
                         new_fringe[j[1].__hash__()] = (j[1], fringe[i][0], j[0])
                         seen[j[1].__hash__()] = (j[1], fringe[i][0], j[0])

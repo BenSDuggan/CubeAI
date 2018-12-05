@@ -22,7 +22,7 @@ def gui(n):
 def ai(type, n, scramble):
     if type == 'bfs':
         m = Cube(n)
-        print('Scramble moves: ' + str(m.simple_scramble(scramble)))
+        print('Scramble moves: ' + str(m.trueScramble(scramble)))
         print('Scramble hash: ' + str(m.__hash__()))
         input('Press something to continue.')
         ai = BFS(m)
