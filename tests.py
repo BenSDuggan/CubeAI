@@ -11,7 +11,7 @@ from AIs import *
 def BFS_Test(n, scramble_length, tests, outputs, output_name):
 	print('Testing BFS:')
 
-	results = [['Trial#', 'scramble_length', 'scramble_pattern', 'correct', 'solved_time(sec)', 'ai_path']]
+	results = [['Trial', 'scrambleLength', 'scramblePattern', 'correct', 'solvedTime(sec)', 'aiPath']]
 
 	for i in range(tests):
 		c = Cube(n)
@@ -19,7 +19,11 @@ def BFS_Test(n, scramble_length, tests, outputs, output_name):
 		scramble_hash = c.__hash__()
 		ai = BFS(c)
 		start_time = time.time()
-		ai_path = ai.solve()
+		try:
+			ai_path = ai.solve(1)
+		except Exception as e:
+			print('No good')
+
 		end_time = time.time()
 		correct = ai_path[-1][1].isSolved()
 
@@ -40,11 +44,10 @@ def BFS_Test(n, scramble_length, tests, outputs, output_name):
 		   writer = csv.writer(file)
 		   writer.writerows(results)
 
-
 if __name__ == '__main__':
 	n = 2
-	scramble_length = 2
-	tests = 2
+	scramble_length = 20
+	tests = 1
 	outputs = ['latex', 'csv']
 	output_name = 'tests/BFS/test'
 
