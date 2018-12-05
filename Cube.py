@@ -331,6 +331,13 @@ class Cube:
 
     def children(self,depth=None):
         children = []
+        # Only use front, right and up with prime as we don't need all moves
+        if depth == '2x':
+            for i in range(3):
+                children.append(((i,1),self.__copy__().makeMove((i,1))))
+                children.append(((i,3),self.__copy__().makeMove((i,3))))
+            return children
+
         for i in range(self.moves):
             children.append(((i,1),self.__copy__().makeMove((i,1))))
             if depth == 'all' or depth == 'prime':
