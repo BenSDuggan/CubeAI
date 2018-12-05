@@ -1,6 +1,6 @@
 '''
     Team 4 - Ben Duggan & Connor Altic
-    11/23/18
+    12/4/18
     Class that contains all of the AIs used
 '''
 
@@ -49,9 +49,10 @@ class A_star:
         self.cube = cube
 
     def solve(self):
-        goal_state = State(Cube(self.cube.size), None, 0, 0)
+        start_state = State(self.cube, None, 0, 0, None)
+        goal_state = State(Cube(self.cube.size), None, 0, 0, None)
         explored = set()
-        fringe = [State(self.cube, None, 0, 0)]
+        fringe = [start_state]
         heapq.heapify(fringe)
 
         print("starting solve")
@@ -59,15 +60,25 @@ class A_star:
             current_state = heapq.heappop(fringe)
             print(current_state)
             if current_state.current_state.isSolved():
-                return str(current_state)
+                return self.find_path(start_state, current_state)
             if current_state.__hash__() in explored:
                 continue
-            for i in current_state.current_state.children('prime'):
+            for i in current_state.current_state.children('2x'):
                 if i.__hash__() not in explored:
-                    new_addition = State(i[1], current_state, current_state.depth+1+Heuristic.hammingDistance(i[1]), current_state.depth+1, i[0])
+                    new_addition = State(i[1], current_state, current_state.depth+1+Heuristic.simpleHeuristic(i[1]), current_state.depth+1, i[0])
                     heapq.heappush(fringe, new_addition)
                     explored.add(current_state.__hash__())
 
+    def find_path(self, start_state, end_state):
+        last_state = end_state
+        path = [ [last_state.move, last_state.current_state] ]
+        last_state = last_state.parent_state
+
+        while last_state != None and start_state.current_state.__hash__() != path[0][1].__hash__():
+            path = [ [last_state.move, last_state.current_state] ] + path
+            last_state = last_state.parent_state
+
+        return path
 
 class Bidirectional_A_star:
     def __init__(self, cube):
@@ -81,9 +92,11 @@ class IDA_Star:
         self.cube = cube
 
     def solve(self):
-        bound = Heuristic.simpleHeuristic(self.cube)
-        path = [self.cube]
+        bound = Heuristic.hammingDistance(self.cube)
+        path = [(None, self.cube)] #(move, cube)
         while True:
+            print('Path len: ' + str(len(path)) + '; bound: ' + str(bound) + '; path head: (' + str(path[-1][0]) + ', ' + str(path[-1][1].state) + ')')
+
             t = self.search(path, 0, bound)
             if t[0]:
                 return (path, bound)
@@ -94,23 +107,24 @@ class IDA_Star:
             print(path)
 
     def search(self, path, g, bound):
-        node = path[-1]
-        f = g + Heuristic.simpleHeuristic(node)
+        node = path[-1][1]
+        f = g + Heuristic.hammingDistance(node)
         if f > bound:
             return False, path, f
+        print('')
         if node.isSolved():
             return True, path, f
         min = False, path, float('inf')
-        for succ in node.children():
+        for succ in node.children('all'):
             if succ[1] not in path:
                 path.append(succ)
-                t = self.search(path, g + 1, bound)
+                t = self.search(path, g+1, bound)
                 if t[0]:
                     return t
-                if t[1] < min[2]:
-                    min = t[0], path, t[1]
+                if t[2] < min[2]:
+                    min = t[0], path, t[2]
                 del path[-1]
-        return False, path, min
+        return min
 
 class Maxi:
     def __init__(self, cube):
