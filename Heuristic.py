@@ -62,101 +62,42 @@ class myHeuristic:
 
     @staticmethod
     def scoreCube(this):
-        c = ManhattanCube(this)
-        score = myHeuristic.scorePiece(c, 0)
-        print(c.cube)
-        this.makeMove((1,1))
-        this.makeMove((3,3))
-        c = ManhattanCube(this)
-        score = score + myHeuristic.scorePiece(c, 1)
-        this.makeMove((1,1))
-        this.makeMove((3,3))
-        c = ManhattanCube(this)
-        score = score + myHeuristic.scorePiece(c, 2)
-        this.makeMove((1,1))
-        this.makeMove((3,3))
-        score = score + myHeuristic.scorePiece(c, 3)
-        this.makeMove((1,1))
-        this.makeMove((3,3))
-        this.makeMove((4,2))
-        this.makeMove((2,2))
-        this.makeMove((1,3))
-        this.makeMove((3,1))
-        c = ManhattanCube(this)
-        score = score + myHeuristic.scorePiece(c, 4)
-        this.makeMove((1,3))
-        this.makeMove((3,1))
-        cube = ManhattanCube(this)
-        score = score + myHeuristic.scorePiece(c, 5)
-        this.makeMove((1,3))
-        this.makeMove((3,1))
-        c = ManhattanCube(this)
-        score = score + myHeuristic.scorePiece(c, 6)
-        this.makeMove((1,3))
-        this.makeMove((3,1))
-        c = ManhattanCube(this)
-        return score + myHeuristic.scorePiece(cube,7)
+
 
     @staticmethod
     def scorePiece(c, p):
         index = c.findPiece(p)
-        case = c.cube[index]
-        if case[0] == 0:
-            if case[1] == 0:
-                return 0
-            if case[1] == 1:
-                return 2
-            if case[1] == 2:
-                return 2
-        if case[0] == 1:
-            if case[1] == 0:
-                return 1
-            if case[1] == 1:
-                return 1
-            if case[1] == 2:
-                return 2
-        if case[0] == 2:
-            if case[1] == 0:
-                return 1
-            if case[1] == 1:
-                return 2
-            if case[1] == 2:
-                return 2
-        if case[0] == 3:
-            if case[1] == 0:
-                return 1
-            if case[1] == 1:
-                return 2
-            if case[1] == 2:
-                return 1
-        if case[0] == 4:
-            if case[1] == 0:
-                return 2
-            if case[1] == 1:
-                return 1
-            if case[1] == 2:
-                return 1
-        if case[0] == 5:
-            if case[1] == 0:
-                return 2
-            if case[1] == 1:
-                return 2
-            if case[1] == 2:
-                return 2
-        if case[0] == 6:
-            if case[1] == 0:
-                return 2
-            if case[1] == 1:
-                return 2
-            if case[1] == 2:
-                return 2
-        if case[0] == 7:
-            if case[1] == 0:
-                return 1
-            if case[1] == 1:
-                return 2
-            if case[1] == 2:
-                return 2
+        if p == 0:
+            if index == 0:
+                if c.ore[index] == 0:
+                    return 0
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 1:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 1
+                if c.ore[index] == 2:
+                    return 2
+            if index == 2:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 3:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 1
+            
+
 
 
 # Run python Heuristic.py
