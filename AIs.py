@@ -4,7 +4,7 @@
     Class that contains all of the AIs used
 '''
 
-import heapq
+import heapq, time
 from Cube import *
 from Heuristic import *
 from State import *
@@ -16,7 +16,8 @@ class BFS:
     def __init__(self, cube):
         self.cube = cube
 
-    def solve(self):
+    def solve(self, timeout=float('inf')):
+        start_time = time.time()
         goal_state = Cube(self.cube.size).__hash__()
         depth = 0
         if self.cube.__hash__() == goal_state:
@@ -31,6 +32,10 @@ class BFS:
         fringe[self.cube.__hash__()] = (self.cube, None, None) 
 
         while True:
+            # Check to see if AI is timed out
+            if time.time() - start_time >= timeout:
+                raise Exception('Code timed out')
+
             depth += 1
             print('Depth: ' + str(depth) + ', length of fringe: ' + str(len(fringe)) + '; len seen: ' + str(len(seen)))
 
@@ -39,7 +44,7 @@ class BFS:
                 for j in fringe[i][0].children('all'):
                     if j[1].__hash__() == goal_state:
                         print('Found goal at depth ' + str(depth))
-                        return self.find_path(seen, (self.cube, fringe[i][0], j[0]))
+                        return self.find_path(seen, (j[1], fringe[i][0], j[0], -1))
                     if j[1].__hash__() not in fringe and j[1].__hash__() not in seen:
                         new_fringe[j[1].__hash__()] = (j[1], fringe[i][0], j[0])
                         seen[j[1].__hash__()] = (j[1], fringe[i][0], j[0])
