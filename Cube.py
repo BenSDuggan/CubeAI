@@ -29,15 +29,32 @@ class Cube:
                     return False
         return True
 
+
+    def trueScramble(self, length):
+        moves = []
+        for i in range(length):
+            if i == 0:
+                move = (random.randint(0,2), random.randint(1,3))
+                self.makeMove(move)
+                moves.append(move)
+            else:
+                move = (random.randint(0, 2), random.randint(1, 3))
+                while move[0] == moves[i - 1][0]:
+                    move = (random.randint(0, 2), random.randint(1, 3))
+                self.makeMove(move)
+                moves.append(move)
+        return moves
+
+
     # scramble takes a length and returns list of moves
     # in the scramble, scramble won't turn the same layer
     # or opposite layers sequentially
     def scramble(self, length):
         moves = []
         for i in range(length):
-            move = (random.randint(0, 5), random.randint(1, 3))
+            move = (random.randint(0, 4), random.randint(1, 3))
             while i >= 1 and (moves[i - 1][0] == move[0] or move[0] == self.opposite(moves[i - 1][0])):
-                move = (random.randint(0, 5), random.randint(1, 3))
+                move = (random.randint(0, 4), random.randint(1, 3))
             moves.append(move)
             self.makeMove(move)
         return moves

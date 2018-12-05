@@ -13,20 +13,27 @@ class ManhattanCube:
         temp.append([map.state[3][3], map.state[2][3], map.state[5][1]])
         temp.append([map.state[3][2], map.state[4][2], map.state[5][0]])
         self.cube = []
+        self.ore = []
         for i in temp:
             c = {i[0],i[1],i[2]}
-            print("~~~~~")
-            print(c)
-            print(i)
+
             for j in range(len(cublets)):
                 if c == cublets[j]:
                     self.cube.append(j)
+        for i in range(len(temp)):
+            if temp[i][0] == 1 or temp[i][0] == 3:
+                self.ore.append(0)
+            if temp[i][1] == 1 or temp[i][1] == 3:
+                self.ore.append(1)
+            if temp[i][2] == 1 or temp[i][2] == 3:
+                self.ore.append(2)
+
 
 
     # given the cublet id returns that cublet's index in cube
     def findPiece(self, id):
         for i in range(len(self.cube)):
-            if self.cube[i][0] == id:
+            if self.cube[i] == id:
                 return i
 
     def cublet(self, a):
@@ -45,4 +52,9 @@ class ManhattanCube:
 
 
 if __name__ == '__main__':
-    pass
+    c = Cube(2)
+    print(c.scramble(20))
+    m = ManhattanCube(c)
+    print(m.cube)
+    print(m.ore)
+    print(m.findPiece(3))

@@ -10,6 +10,18 @@ from ManhattanCube import *
 class Heuristic:
 
     @staticmethod
+    def anotherHeuristic(cube):
+        m = ManhattanCube(cube)
+        score = 0
+        for i in range(len(m.cube)):
+            if m.cube[i] == i:
+                if m.ore[i] == 0:
+                    score = score + 50
+                else:
+                    score = score + 25
+        return score
+
+    @staticmethod
     def simpleHeuristic(state):
         current_state = state.state
         if state.isSolved():
@@ -52,7 +64,6 @@ class myHeuristic:
     def scoreCube(this):
         c = ManhattanCube(this)
         score = myHeuristic.scorePiece(c, 0)
-        print("~~")
         print(c.cube)
         this.makeMove((1,1))
         this.makeMove((3,3))
@@ -150,9 +161,6 @@ class myHeuristic:
 
 # Run python Heuristic.py
 if __name__ == '__main__':
-    #print(Heuristic.simpleHeuristic())
     cube = Cube(2)
-    cube.makeMove((0,1))
-    # cube.makeMove((1,1))
-    # cube.makeMove((3,3))
-    print("Manhattan distance: " + str(Heuristic.manhattanDistance(cube)))
+    print(cube.trueScramble(6))
+    print(Heuristic.anotherHeuristic(cube))
