@@ -22,14 +22,31 @@ def gui(n):
 def ai(type, n, scramble):
     if type == 'bfs':
         m = Cube(n)
-        m.scramble(scramble) # Not good with heigh scrambles (>4)
+        print('Scramble moves: ' + str(m.simple_scramble(scramble)))
+        print('Scramble hash: ' + str(m.__hash__()))
+        input('Press something to continue.')
         ai = BFS(m)
-        print(ai.solve())
+        start_time = time.time()
+        path = ai.solve()
+        print('AI took: ' + str(time.time()-start_time) + ' seconds')
+        for i in range(len(path)):
+            print('Move #' + str(i+1) + '[ ' + str(path[i][0]) + '; ' + str(path[i][1].state))
+    elif type == 'bbfs':
+        m = Cube(n)
+        print('Scramble moves: ' + str(m.simple_scramble(scramble)))
+        print('Scramble hash: ' + str(m.__hash__()))
+        input('Press something to continue.')
+        ai = Better_BFS(m)
+        start_time = time.time()
+        path = ai.solve()
+        print('AI took: ' + str(time.time()-start_time) + ' seconds')
+        for i in range(len(path)):
+            print('Move #' + str(i+1) + '[ ' + str(path[i][0]) + '; ' + str(path[i][1].state))
     elif type == 'a*':
         m = Cube(n)
         print('Scramble moves: ' + str(m.simple_scramble(scramble)))
         print('Scramble hash: ' + str(m.__hash__()))
-        input()
+        input('Press something to continue.')
         ai = A_star(m)
         path = ai.solve()
         for i in range(len(path)):
@@ -43,6 +60,7 @@ def ai(type, n, scramble):
     elif type == 'ida*':
         m = Cube(n)
         print('Scramble moves: ' + str(m.simple_scramble(scramble)))
+        input('Press something to continue.')
         #m.makeMove((0,3))
         #m.makeMove((2,3))
         #m.makeMove((3,3))

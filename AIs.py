@@ -21,28 +21,90 @@ class BFS:
         depth = 0
         if self.cube.__hash__() == goal_state:
             print('Found goal at depth ' + str(depth))
-            return 'yes'
+            return [(None, self.cube)]
 
-        seen = set()
-        seen.add(self.cube.__hash__())
+        # Remembers every state seen and allows us to find the parent state of a cube so we can output the path
+        seen = {}
+        seen[self.cube.__hash__()] = (self.cube, None, None) #Current cube, parent cube, forbiden moves, move from parent to current
+        # The nodes that need to be expanded (the deepest lay)
         fringe = {}
-        fringe[self.cube.__hash__()] = self.cube
+        fringe[self.cube.__hash__()] = (self.cube, None, None) 
 
         while True:
             depth += 1
-            print(depth)
+            print('Depth: ' + str(depth) + ', length of fringe: ' + str(len(fringe)) + '; len seen: ' + str(len(seen)))
+
             new_fringe = {}
             for i in fringe:
-                children = fringe[i].children('prime')
-                for j in children:
+                for j in fringe[i][0].children('all'):
                     if j[1].__hash__() == goal_state:
                         print('Found goal at depth ' + str(depth))
-                        return 'yes'
+                        return self.find_path(seen, (self.cube, fringe[i][0], j[0]))
                     if j[1].__hash__() not in fringe and j[1].__hash__() not in seen:
-                        new_fringe[j[1].__hash__()] = j[1]
-                        seen.add(j[1].__hash__())
+                        new_fringe[j[1].__hash__()] = (j[1], fringe[i][0], j[0])
+                        seen[j[1].__hash__()] = (j[1], fringe[i][0], j[0])
             fringe = new_fringe
-            print(len(fringe))
+
+    def find_path(self, seen, goal_state):
+        last_state = goal_state
+        path = [ (last_state[2], last_state[0]) ]
+        last_state = seen[last_state[1].__hash__()]
+
+        while last_state != None:
+            path = [ (last_state[2], last_state[0]) ] + path
+            if last_state[1] == None:
+                return path
+            last_state = seen[last_state[1].__hash__()]
+
+        return path
+
+class Better_BFS:
+    def __init__(self, cube):
+        self.cube = cube
+
+    def solve(self):
+        goal_state = Cube(self.cube.size).__hash__()
+        depth = 0
+        if self.cube.__hash__() == goal_state:
+            print('Found goal at depth ' + str(depth))
+            return [(None, self.cube)]
+
+        # Remembers every state seen and allows us to find the parent state of a cube so we can output the path
+        seen = {}
+        seen[self.cube.__hash__()] = (self.cube, None, None, -1) #Current cube, parent cube, forbiden moves, move from parent to current
+        # The nodes that need to be expanded (the deepest lay)
+        fringe = {}
+        fringe[self.cube.__hash__()] = (self.cube, None, None, -1) 
+
+        while True:
+            depth += 1
+            print('Depth: ' + str(depth) + ', length of fringe: ' + str(len(fringe)) + '; len seen: ' + str(len(seen)))
+
+            new_fringe = {}
+            for i in fringe:
+                for j in fringe[i][0].children('2x'):
+                    if j[1].__hash__() == goal_state:
+                        print('Found goal at depth ' + str(depth))
+                        return self.find_path(seen, (self.cube, fringe[i][0], j[0], None))
+                    if j[0][0] == fringe[i][3]:
+                        continue
+                    if j[1].__hash__() not in fringe and j[1].__hash__() not in seen:
+                        new_fringe[j[1].__hash__()] = (j[1], fringe[i][0], j[0], j[0][0])
+                        seen[j[1].__hash__()] = (j[1], fringe[i][0], j[0], j[0][0])
+            fringe = new_fringe
+
+    def find_path(self, seen, goal_state):
+        last_state = goal_state
+        path = [ (last_state[2], last_state[0]) ]
+        last_state = seen[last_state[1].__hash__()]
+
+        while last_state != None:
+            path = [ (last_state[2], last_state[0]) ] + path
+            if last_state[1] == None:
+                return path
+            last_state = seen[last_state[1].__hash__()]
+
+        return path
 
 class A_star:
     def __init__(self, cube):

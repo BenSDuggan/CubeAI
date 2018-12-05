@@ -62,6 +62,7 @@ class myHeuristic:
 
     @staticmethod
     def scoreCube(this):
+        pass
 
 
     @staticmethod
