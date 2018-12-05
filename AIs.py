@@ -127,7 +127,7 @@ class A_star:
                 continue
             for i in current_state.current_state.children('2x'):
                 if i.__hash__() not in explored:
-                    new_addition = State(i[1], current_state, current_state.depth+1+Heuristic.simpleHeuristic(i[1]), current_state.depth+1, i[0])
+                    new_addition = State(i[1], current_state, current_state.depth+1+Heuristic.manhattanDistance(i[1]), current_state.depth+1, i[0])
                     heapq.heappush(fringe, new_addition)
                     explored.add(current_state.__hash__())
 

@@ -44,11 +44,13 @@ def ai(type, n, scramble):
             print('Move #' + str(i+1) + '[ ' + str(path[i][0]) + '; ' + str(path[i][1].state))
     elif type == 'a*':
         m = Cube(n)
-        print('Scramble moves: ' + str(m.simple_scramble(scramble)))
+        print('Scramble moves: ' + str(m.trueScramble(scramble)))
         print('Scramble hash: ' + str(m.__hash__()))
         input('Press something to continue.')
         ai = A_star(m)
+        start_time = time.time()
         path = ai.solve()
+        print('AI took: ' + str(time.time()-start_time) + ' seconds')
         for i in range(len(path)):
             print('Move #' + str(i+1) + '[ ' + str(path[i][0]) + '; ' + str(path[i][1].state))
 

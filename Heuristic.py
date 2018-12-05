@@ -62,8 +62,11 @@ class myHeuristic:
 
     @staticmethod
     def scoreCube(this):
-        pass
-
+        cube = ManhattanCube(this)
+        score = 0
+        for i in range(6):
+            score = score + myHeuristic.scorePiece(cube, i)
+        return float(score) / 4
 
     @staticmethod
     def scorePiece(c, p):
@@ -97,7 +100,327 @@ class myHeuristic:
                     return 2
                 if c.ore[index] == 2:
                     return 1
-            
+            if index == 4:
+                if c.ore[index] == 0:
+                    return 2
+                if c.ore[index] == 1:
+                    return 1
+                if c.ore[index] == 2:
+                    return 1
+            if index == 5:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 6:
+                if c.ore[index] == 0:
+                    return 2
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+        if p == 1:
+            if index == 0:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 1
+                if c.ore[index] == 2:
+                    return 2
+            if index == 1:
+                if c.ore[index] == 0:
+                    return 0
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 2:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 1
+            if index == 3:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 4:
+                if c.ore[index] == 0:
+                    return 2
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 5:
+                if c.ore[index] == 0:
+                    return 2
+                if c.ore[index] == 1:
+                    return 1
+                if c.ore[index] == 2:
+                    return 1
+            if index == 6:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+        if p == 2:
+            if index == 0:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 1:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 1
+            if index == 2:
+                if c.ore[index] == 0:
+                    return 0
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 3:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 1
+                if c.ore[index] == 2:
+                    return 2
+            if index == 4:
+                if c.ore[index] == 0:
+                    return 2
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 5:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 6:
+                if c.ore[index] == 0:
+                    return 2
+                if c.ore[index] == 1:
+                    return 1
+                if c.ore[index] == 2:
+                    return 1
+        if p == 3:
+            if index == 0:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 1
+            if index == 1:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 2:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 1
+                if c.ore[index] == 2:
+                    return 2
+            if index == 3:
+                if c.ore[index] == 0:
+                    return 0
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 4:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 5:
+                if c.ore[index] == 0:
+                    return 2
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 6:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+        if p == 4:
+            if index == 0:
+                if c.ore[index] == 0:
+                    return 2
+                if c.ore[index] == 1:
+                    return 1
+                if c.ore[index] == 2:
+                    return 1
+            if index == 1:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 2:
+                if c.ore[index] == 0:
+                    return 2
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 3:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 4:
+                if c.ore[index] == 0:
+                    return 0
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 5:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 1
+                if c.ore[index] == 2:
+                    return 2
+            if index == 6:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+        if p == 5:
+            if index == 0:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 1:
+                if c.ore[index] == 0:
+                    return 2
+                if c.ore[index] == 1:
+                    return 1
+                if c.ore[index] == 2:
+                    return 1
+            if index == 2:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 3:
+                if c.ore[index] == 0:
+                    return 2
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 4:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 1
+                if c.ore[index] == 2:
+                    return 2
+            if index == 5:
+                if c.ore[index] == 0:
+                    return 0
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 6:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 1
+        if p == 6:
+            if index == 0:
+                if c.ore[index] == 0:
+                    return 2
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 1:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 2:
+                if c.ore[index] == 0:
+                    return 2
+                if c.ore[index] == 1:
+                    return 1
+                if c.ore[index] == 2:
+                    return 1
+            if index == 3:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 4:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
+            if index == 5:
+                if c.ore[index] == 0:
+                    return 1
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 1
+            if index == 6:
+                if c.ore[index] == 0:
+                    return 0
+                if c.ore[index] == 1:
+                    return 2
+                if c.ore[index] == 2:
+                    return 2
 
 
 
@@ -105,4 +428,4 @@ class myHeuristic:
 if __name__ == '__main__':
     cube = Cube(2)
     print(cube.trueScramble(6))
-    print(Heuristic.anotherHeuristic(cube))
+    print(Heuristic.manhattanDistance(cube))
