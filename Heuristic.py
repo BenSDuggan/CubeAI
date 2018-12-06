@@ -38,7 +38,7 @@ class Heuristic:
                     score += 50
                 elif l == 2:
                     score += 25
-        return 100*6 - score
+        return float(score) / 600
 
     @staticmethod
     def hammingDistance(cube):
@@ -60,13 +60,23 @@ class myHeuristic:
     def __init__(self):
         pass
 
+
+    @staticmethod
+    def scoreCubeTwo(this):
+        cube = ManhattanCube(this)
+        simple = Heuristic.simpleHeuristic(this)
+        score = 0
+        for i in range(6):
+            score = score + myHeuristic.scorePiece(cube, i)
+        return (float(score) / 4) - simple
+
     @staticmethod
     def scoreCube(this):
         cube = ManhattanCube(this)
         score = 0
         for i in range(6):
             score = score + myHeuristic.scorePiece(cube, i)
-        return float(score) / 4
+        return (float(score) / 4)
 
     @staticmethod
     def scorePiece(c, p):
@@ -428,4 +438,4 @@ class myHeuristic:
 if __name__ == '__main__':
     cube = Cube(2)
     print(cube.trueScramble(6))
-    print(Heuristic.manhattanDistance(cube))
+    print(myHeuristic.scoreCube(cube))
