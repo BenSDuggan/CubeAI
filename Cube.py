@@ -30,6 +30,11 @@ class Cube:
         return True
 
 
+    # trueScramble is the final version of scramble, it takes an
+    # int which is the length of scramble and returns a list of 
+    # moves (represented as tuples) which is the scramble.
+    # trueScramble only scrambles using moves right front and up,
+    # and will never have two consecutive moves on the same face
     def trueScramble(self, length):
         moves = []
         for i in range(length):
@@ -44,6 +49,43 @@ class Cube:
                 self.makeMove(move)
                 moves.append(move)
         return moves
+
+    # obviousSolution takes a scramble and returns the reverse of that solution
+    # most of the time this is not the shortest solution, but we can be positive this
+    # is a solution.  
+    @staticmethod
+    def obviousSolution(scramble):
+        scramble = scramble.reverse()
+        solution = []
+        for i in scramble:
+            solution.append((i[0], 4 - i[1]))
+        return solution
+
+    # translateMove simply takes a move (tuple)
+    # and returns that move's representation in standard
+    # rubik's cube notation
+    @staticmethod
+    def translateMove(move):
+        if move[0] == 0:
+            answer = "F"
+        if move[0] == 1:
+            answer = "U"
+        if move[0] == 2:
+            answer = "R"
+        if move[0] == 3:
+            answer = "D"
+        if move[0] == 4:
+            answer = "L"
+        if move[0] == 5:
+            answer = "B"
+        if move[1] == 2:
+            answer = answer + "2"
+        if move[1] == 3:
+            answer = answer + "'"
+        return answer
+            
+
+
 
 
     # scramble takes a length and returns list of moves
@@ -348,6 +390,14 @@ class Cube:
 
     def children(self,depth=None):
         children = []
+        # Only use front, right and up with prime as we don't need all moves
+        if depth == '2x':
+            for i in range(3):
+                children.append(((i,1),self.__copy__().makeMove((i,1))))
+                children.append(((i, 2), self.__copy__().makeMove((i, 2))))
+                children.append(((i,3),self.__copy__().makeMove((i,3))))
+            return children
+
         for i in range(self.moves):
             children.append(((i,1),self.__copy__().makeMove((i,1))))
             if depth == 'all' or depth == 'prime':
