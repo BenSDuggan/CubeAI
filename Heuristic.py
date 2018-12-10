@@ -1,7 +1,9 @@
 '''
+
     Team 4 - Ben Duggan & Connor Altic
     11/26/18
     Class containing heuristics that can be used
+
 '''
 
 from Cube import *
@@ -38,7 +40,7 @@ class Heuristic:
                     score += 50
                 elif l == 2:
                     score += 25
-        return score/1200
+        return score/-1200
 
     @staticmethod
     def hammingDistance(cube):
@@ -67,7 +69,7 @@ class myHeuristic:
         score = 0
         for i in range(6):
             score = score + myHeuristic.scorePiece(cube, i)
-        return (float(score) / 4) - simple
+        return (float(score) / 4) + simple
 
     @staticmethod
     def scorePiece(c, p):

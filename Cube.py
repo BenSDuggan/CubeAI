@@ -29,7 +29,6 @@ class Cube:
                     return False
         return True
 
-
     # trueScramble is the final version of scramble, it takes an
     # int which is the length of scramble and returns a list of 
     # moves (represented as tuples) which is the scramble.
@@ -52,7 +51,7 @@ class Cube:
 
     # obviousSolution takes a scramble and returns the reverse of that solution
     # most of the time this is not the shortest solution, but we can be positive this
-    # is a solution.  
+    # is a valid solution.  
     @staticmethod
     def obviousSolution(scramble):
         scramble = scramble.reverse()
@@ -83,10 +82,6 @@ class Cube:
         if move[1] == 3:
             answer = answer + "'"
         return answer
-            
-
-
-
 
     # scramble takes a length and returns list of moves
     # in the scramble, scramble won't turn the same layer

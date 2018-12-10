@@ -99,22 +99,38 @@ def ai(type, n, scramble):
         print("Not sure what you want")
 
 if __name__ == '__main__':
-    x,n,scramble = 'ida*',2,4
-    if len(sys.argv) >= 2:
-        x = sys.argv[1]
-    if len(sys.argv) >= 3:
-        n = int(sys.argv[2])
-    if len(sys.argv) >= 4:
-        scramble = int(sys.argv[3])
-    elif x == None or n == None:
-        print("(h)uman | (bfs)")
-        x = input()
-        print("what n?")
-        n = int(input())
+    # x,n,scramble = 'ida*',2,4
+    # if len(sys.argv) >= 2:
+    #     x = sys.argv[1]
+    # if len(sys.argv) >= 3:
+    #     n = int(sys.argv[2])
+    # if len(sys.argv) >= 4:
+    #     scramble = int(sys.argv[3])
+    # elif x == None or n == None:
+    #     print("(h)uman | (bfs)")
+    #     x = input()
+    #     print("what n?")
+    #     n = int(input())
 
-    assert type(x) == type('a') and type(n) == type(1)
+    # assert type(x) == type('a') and type(n) == type(1)
 
-    if x == 'h':
-        gui(n)
-    else:
-        ai(x, n, scramble)
+    # if x == 'h':
+    #     gui(n)
+    # else:
+    #     ai(x, n, scramble)
+    print('Testing GUI')
+    m = Cube(2)
+
+    g = GUI(cube=m, width=800, height=600, threeD=False)
+
+    g.update()
+
+    time.sleep(1)
+
+    #m.makeMove((0,2))
+
+    #g.scramble(10, 0.3)
+    m.printMap()
+
+    while True:
+        g.update()
