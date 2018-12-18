@@ -8,19 +8,9 @@ from Cube import *
 from ManhattanCube import *
 
 class Heuristic:
-
-    @staticmethod
-    def anotherHeuristic(cube):
-        m = ManhattanCube(cube)
-        score = 0
-        for i in range(len(m.cube)):
-            if m.cube[i] == i:
-                if m.ore[i] == 0:
-                    score = score + 50
-                else:
-                    score = score + 25
-        return score
-
+    # Simple heuristic that gives a higher score for the more similar colors on a face
+    # state = a Cube object
+    # return the heuristic value
     @staticmethod
     def simpleHeuristic(state):
         current_state = state.state
@@ -38,8 +28,11 @@ class Heuristic:
                     score += 50
                 elif l == 2:
                     score += 25
-        return 100*6 - score
+        return 1200 - score
 
+    # Heuristic that calculates the hamming distance of the cube in comparison to the goal state
+    # cube = a Cube object
+    # return the heuristic value
     @staticmethod
     def hammingDistance(cube):
         current_state = cube.state
@@ -51,11 +44,14 @@ class Heuristic:
                     score -= 1
         return score
 
-    # https://stackoverflow.com/questions/36490073/heuristic-for-rubiks-cube
+    # Heuristic that calculates the 3D Manhattan Distance of the cube by calling myHeuristic.scoreCube(cube)
+    # cube = a Cube object
+    # return the heuristic value
     @staticmethod
     def manhattanDistance(cube):
         return myHeuristic.scoreCube(cube)
 
+# Class used to calculate the 3d Manhattan Distance of the cube
 class myHeuristic:
     def __init__(self):
         pass
@@ -63,10 +59,11 @@ class myHeuristic:
     @staticmethod
     def scoreCube(this):
         cube = ManhattanCube(this)
+        simple = Heuristic.simpleHeuristic(this)
         score = 0
         for i in range(6):
             score = score + myHeuristic.scorePiece(cube, i)
-        return float(score) / 4
+        return (float(score) / 4) + simple/1200
 
     @staticmethod
     def scorePiece(c, p):
@@ -428,4 +425,3 @@ class myHeuristic:
 if __name__ == '__main__':
     cube = Cube(2)
     print(cube.trueScramble(6))
-    print(Heuristic.manhattanDistance(cube))
