@@ -1,10 +1,10 @@
 '''
     Team 4 - Ben Duggan & Connor Altic
-    12/10/18
+    8/17/19
     Class with main gui class
 '''
 
-import time
+import time, argparse
 from main_gui import *
 from AIs import *
 from Heuristic import *
@@ -79,40 +79,23 @@ def ai(type, n, scramble_length, heuristic):
 if __name__ == '__main__':
     # Ask the user what they want to run and run it for them
 
-    #x,n,scramble,heuristic = 'ida*',2,12,Heuristic.manhattanDistance
-    x,n,scramble,heuristic = None,None,None,None
-    if len(sys.argv) >= 2:
-        x = sys.argv[1]
-    if len(sys.argv) >= 3:
-        n = int(sys.argv[2])
-    if len(sys.argv) >= 4:
-        scramble = int(sys.argv[3])
-    if len(sys.argv) >= 5:
-        if sys.argv[4] == 's':
-            heuristic = Heuristic.simpleHeuristic
-        elif sys.argv[4] == 'h':
-            heuristic = Heuristic.hammingDistance
-        else:
-            heuristic = Heuristic.manhattanDistance
-    elif x == None or n == None:
-        print("(h)uman (gui) | (bfs), (bbfs), (a*), (ida*), (mini)")
-        x = input()
-        print("what nxn (just n)?")
-        n = int(input())
-        print("what scramble length?")
-        scramble = int(input())
-        print("What heuristic? (s)impleHeuristic, (h)ammingDistance, (m)anhattanDistance")
-        h = input()
-        if h == 's':
-            heuristic = Heuristic.simpleHeuristic
-        elif h == 'h':
-            heuristic = Heuristic.hammingDistance
-        else:
-            heuristic = Heuristic.manhattanDistance
+    parser = argparse.ArgumentParser(description='CubeAI\nCSCI-B 351 final project with the goal of making an AI to solve a 2x2 cube and possibly scaling up to higher order cubes. The AI algorithms used are BFS, Better BFS (limit moves), A*, IDA*, and Mini (a minimizing version of MiniMax). There are 3 heuristics implimented: simpleHeuristic, hammingDistance and manhattanDistance. ', formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('--m', metavar='False', default=False, type=bool, action='store', help='Run manually (start gui) or run the AI first')
+    parser.add_argument('--n', metavar='2', default=2, type=int, action='store', help='The dimension of the cube (nxn)')
+    parser.add_argument('--s', metavar='5', default=5, type=int, action='store', help='How many times to scramble the cube')
+    parser.add_argument('--a', metavar='ida*', default='ida*', type=str, action='store', help='Which AI algorithm to use: (bfs), (bbfs), (a*), (ida*), (mini)')
+    parser.add_argument('--h', metavar='m', default='m', type=str, action='store', help='Which heuristic to use: (s)impleHeuristic, (h)ammingDistance, (m)anhattanDistance.')
 
-    assert type(x) == type('a') and type(n) == type(1) and type(scramble) == type(1)
+    args = parser.parse_args()
 
-    if x == 'h':
-        gui(n, scramble)
+    if args.h == 's':
+        heuristic = Heuristic.simpleHeuristic
+    elif args.h == 'h':
+        heuristic = Heuristic.hammingDistance
     else:
-        ai(x, n, scramble, heuristic)
+        heuristic = Heuristic.manhattanDistance
+
+    if args.m:
+        gui(args.n, args.s)
+    else:
+        ai(args.a, args.n, args.s, heuristic)

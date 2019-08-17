@@ -2,12 +2,25 @@
 CSCI-B 351 final project with the goal of making an AI to solve a 2x2 cube and possibly scaling up to higher order cubes.  The AI algorithms used are BFS, Better BFS (limit moves), A\*, IDA\*, and Mini (a minimizing version of MiniMax).  There are 3 heuristics implimented: simpleHeuristic, hammingDistance and manhattanDistance.  There is a GUI which shows a 2D and 3D cube inaddition to the move states and allows for people to try to solve the cube in an easy way.
 
 # How to run:
-First make sure you have pygames installed by running `pip install pygames`.  The simplest way to run the code is by running `python main.py`.  The console will then walk you through the options.  Additionally you can use command line arguments.  The first argument is the size of the cube n (nxn), then the scramble length, next the AI algorithm (bfs, bbfs, a\*, ida\*, mini) and finally the heuristic ((s)impleHeuristic, (h)ammingDistance, (m)anhattanCube).
+First make sure you have pygames installed by running `pip install pygames`.  The simplest way to run the code is by running `python main.py`.  To view the command line arguments type `python main.py -h`.  This will show the help page which is shown below:
+```
+CubeAI
+CSCI-B 351 final project with the goal of making an AI to solve a 2x2 cube and possibly scaling up to higher order cubes. The AI algorithms used are BFS, Better BFS (limit moves), A*, IDA*, and Mini (a minimizing version of MiniMax). There are 3 heuristics implimented: simpleHeuristic, hammingDistance and manhattanDistance. 
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --m False   Run manually (start gui) or run the AI first
+  --n 2       The dimension of the cube (nxn)
+  --s 5       How many times to scramble the cube
+  --a ida*    Which AI algorithm to use: (bfs), (bbfs), (a*), (ida*), (mini)
+  --h m       Which heuristic to use: (s)impleHeuristic, (h)ammingDistance, (m)anhattanDistance.
+```
+
 
 # Example images:
-![3D 2x2 GUI](/project_files/images/3d_2x2.png)
+![3D 2x2 GUI](/docs/images/3d_2x2.png)
 3D 2X2 cube in GUI
-![2D 2x2 GUI](/project_files/images/2d_2x2.png)
+![2D 2x2 GUI](/docs/images/2d_2x2.png)
 2D 2x2 cube in GUI
 
 # Documentation:
