@@ -5,7 +5,9 @@ CSCI-B 351 final project with the goal of making an AI to solve a 2x2 cube and p
 First make sure you have pygames installed by running `pip install pygames`.  The simplest way to run the code is by running `python main.py`.  To view the command line arguments type `python main.py -h`.  This will show the help page which is shown below:
 ```
 CubeAI
-CSCI-B 351 final project with the goal of making an AI to solve a 2x2 cube and possibly scaling up to higher order cubes. The AI algorithms used are BFS, Better BFS (limit moves), A*, IDA*, and Mini (a minimizing version of MiniMax). There are 3 heuristics implimented: simpleHeuristic, hammingDistance and manhattanDistance. 
+CSCI-B 351 final project with the goal of making an AI to solve a 2x2 cube and possibly scaling up to higher order cubes.
+The AI algorithms used are BFS, Better BFS (limit moves), A*, IDA*, and Mini (a minimizing version of MiniMax).
+There are 3 heuristics implimented: simpleHeuristic, hammingDistance and manhattanDistance. 
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -18,9 +20,9 @@ optional arguments:
 
 
 # Example images:
-![3D 2x2 GUI](/docs/images/3d_2x2.png)
+![3D 2x2 GUI](/docs/3d_2x2.png)
 3D 2X2 cube in GUI
-![2D 2x2 GUI](/docs/images/2d_2x2.png)
+![2D 2x2 GUI](/docs/2d_2x2.png)
 2D 2x2 cube in GUI
 
 # Documentation:
