@@ -1,0 +1,19 @@
+# Python stuff
+.pytest_cache
+__pycache__
+*.pyc
+
+# pip stuff
+dapt.egg-info/*
+dist/*
+
+# Dev env stuff
+.vscode
+.DS_Store
+
+# Unwanted files
+test.csv
+docs/_build
+docs/modules
+ignore.py
+test.py

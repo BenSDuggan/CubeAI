@@ -1,18 +1,21 @@
-'''
-    Team 4 - Ben Duggan & Connor Altic
-    8/17/19
-    Class with main gui class
-'''
+"""
+Team 4 - Ben Duggan & Connor Altic
+8/17/19
+Class with main gui class
+"""
 
-import time, argparse
-from main_gui import *
-from AIs import *
-from Heuristic import *
+import argparse
+import time
+
+#from main_gui import *
+from cubeguy.Cube import Cube as lol
+from cubeguy.ai.AIs import *
+from cubeguy.Heuristic import *
 
 # Start the gui
 # n = the size of the cube
 # scramble_length = how many scrambles should be made
-def gui(n, scramble_length):
+""" def gui(n, scramble_length):
     print('Using manual GUI')
 
     m = Cube(n)
@@ -22,7 +25,7 @@ def gui(n, scramble_length):
     print('Scramble: ' + str(scramble_pattern))
     while True:
         g.update()
-
+ """
 # Run the specified AI algorithm and start the GUI to show the results
 # type = a string specifying which AI algorithm to run
 # n = size of the cube
@@ -44,7 +47,7 @@ def ai(type, n, scramble_length, heuristic):
         m = Cube(n)
         ai = Bidirectional_A_star(m, heuristic)
     elif type == 'ida*':
-        m = Cube(n)
+        m = lol(n)
         ai = IDA_Star(m, heuristic)
     elif type == 'mini':
         m = Cube(n)
@@ -88,14 +91,19 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    print(args)
+
     if args.h == 's':
         heuristic = Heuristic.simpleHeuristic
     elif args.h == 'h':
         heuristic = Heuristic.hammingDistance
     else:
         heuristic = Heuristic.manhattanDistance
-
+    print(args.m)
     if args.m:
-        gui(args.n, args.s)
+        print('gui')
+        #gui(args.n, args.s)
+        pass
     else:
+        print('AI')
         ai(args.a, args.n, args.s, heuristic)

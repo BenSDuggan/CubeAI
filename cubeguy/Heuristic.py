@@ -4,8 +4,8 @@
     Class containing heuristics that can be used
 '''
 
-from Cube import *
-from ManhattanCube import *
+from . import Cube
+from . import ManhattanCube
 
 class Heuristic:
     # Simple heuristic that gives a higher score for the more similar colors on a face

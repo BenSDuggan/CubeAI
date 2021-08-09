@@ -5,8 +5,8 @@
 '''
 
 import heapq, time
-from Cube import *
-from Heuristic import *
+from .. import Cube
+from ..Heuristic import *
 
 '''
 First AI tested.  Not an efficient AI as no heuristic is used and there is a large branching factor ~3*n

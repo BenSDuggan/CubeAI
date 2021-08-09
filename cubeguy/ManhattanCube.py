@@ -4,7 +4,7 @@
     Class ManhattanCube that makes a cube of all corner pieces to be used with Manhattan Heuristic
 '''
 
-from Cube import*
+from . import Cube
 
 class ManhattanCube:
     # Makes the Manhattan Cube given a Cube

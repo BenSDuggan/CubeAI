@@ -6,7 +6,7 @@
 
 import math, random
 from copy import copy, deepcopy
-from ManhattanCube import*
+from . import ManhattanCube
 
 class Cube:
     # constructor takes n for size of cube
