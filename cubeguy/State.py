@@ -4,7 +4,7 @@
     Creates a state object of a cube
 '''
 
-from Cube import *
+from . import Cube
 
 class State:
     def __init__(self, current_state, parent_state, fValue, depth, move):
