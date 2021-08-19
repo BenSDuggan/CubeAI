@@ -1,12 +1,21 @@
-'''
-    Team 4 - Ben Duggan & Connor Altic
-    11/3/18
-    Class with main gui class
-'''
+"""
+Team 4 - Ben Duggan & Connor Altic
+11/3/18
+Class with main gui class
 
-import math, random
+Map key:
+0 -> Front
+1 -> Up
+2 -> Right
+3 -> Down
+4 -> Left
+5 -> Back
+"""
+
 from copy import copy, deepcopy
-from . import ManhattanCube
+import math
+import random
+
 
 class Cube:
     # constructor takes n for size of cube
@@ -440,16 +449,3 @@ class Cube:
 if __name__ == '__main__':
     cube = Cube(2)
     print(cube.scramble(5))
-    n = ManhattanCube(cube)
-    print(n.cube)
-
-'''
-
-Map key:
-0 -> Front
-1 -> Up
-2 -> Right
-3 -> Down
-4 -> Left
-5 -> Back
-'''
